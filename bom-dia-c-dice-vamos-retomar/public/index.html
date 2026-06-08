@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#255f48" />
+    <title>Simulador Pecuário</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="authGate" class="auth-gate" hidden>
+      <form id="loginForm" class="auth-card">
+        <div class="brand">
+          <strong>Fazenda SLF - Corinto | MG</strong>
+          <span>Sistema pecuário</span>
+        </div>
+        <label>E-mail<input name="email" type="email" autocomplete="username" required value="lucas@fazendaslf.com" /></label>
+        <label>Senha<input name="password" type="password" autocomplete="current-password" required /></label>
+        <button type="submit">Entrar</button>
+        <p id="loginMessage"></p>
+      </form>
+    </div>
+    <div id="appShell" class="app-shell" hidden>
+      <aside class="sidebar">
+        <div class="brand">
+          <strong>Fazenda SLF - Corinto | MG</strong>
+          <span>Decisão de recria e engorda</span>
+        </div>
+        <nav class="nav-list" aria-label="Navegação principal">
+          <button class="nav-item active" type="button" data-view="overview">Visão geral</button>
+          <button class="nav-item" type="button" data-view="herd">Rebanho</button>
+          <button class="nav-item" type="button" data-view="costs">Custos</button>
+          <button class="nav-item" type="button" data-view="pastures">Pastos/piquetes</button>
+          <button class="nav-item" type="button" data-view="market">Mercado</button>
+          <button class="nav-item" type="button" data-view="auction">Leilão</button>
+          <button class="nav-item" type="button" data-view="loans">Empréstimos</button>
+          <button class="nav-item" type="button" data-view="simulate">Simular</button>
+          <button class="nav-item" type="button" data-view="ai">IA</button>
+        </nav>
+        <button id="refreshBtn" class="ghost-button" type="button">Atualizar dados</button>
+      </aside>
+
+      <main class="workspace">
+        <header class="page-header">
+          <div>
+            <p id="viewEyebrow" class="eyebrow">Visão geral</p>
+            <h1 id="viewTitle">Painel da operação</h1>
+          </div>
+          <div id="apiStatus" class="status-pill">API local</div>
+        </header>
+
+        <section class="view active" id="view-overview">
+          <div class="kpi-grid" id="overviewKpis"></div>
+          <section class="panel dashboard-panel">
+            <div class="section-head">
+              <div>
+                <h2>Dashboard executivo</h2>
+                <span>Estoque, crescimento e projeção por IA preditiva local</span>
+              </div>
+              <label class="inline-filter">Visão<select id="dashboardLotSelect"></select></label>
+            </div>
+            <div id="dashboardInsights" class="insight-strip"></div>
+            <div id="growthCharts" class="chart-grid growth-chart-grid"></div>
+          </section>
+          <div class="flow-grid">
+            <button class="flow-step" type="button" data-view="herd">
+              <span>1</span>
+              <strong>Atualizar rebanho</strong>
+              <small>Lotes, animais e datas de entrada</small>
+            </button>
+            <button class="flow-step" type="button" data-view="costs">
+              <span>2</span>
+              <strong>Lançar custos</strong>
+              <small>Suplementos, fretes, manejo e notinhas</small>
+            </button>
+            <button class="flow-step" type="button" data-view="pastures">
+              <span>3</span>
+              <strong>Controlar pasto</strong>
+              <small>Entrada, saída e condição da pastagem</small>
+            </button>
+            <button class="flow-step primary" type="button" data-view="simulate">
+              <span>4</span>
+              <strong>Decidir venda</strong>
+              <small>GMD, meta, lucro, giro e risco</small>
+            </button>
+          </div>
+          <div class="content-grid">
+            <section class="panel">
+              <div class="section-head">
+                <h2>Lotes ativos</h2>
+                <button class="link-button" type="button" data-view="herd">Gerenciar</button>
+              </div>
+              <div id="overviewLots"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head">
+                <h2>Últimos custos</h2>
+                <button class="link-button" type="button" data-view="costs">Lançar</button>
+              </div>
+              <div id="overviewExpenses"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="view-herd">
+          <div class="split-layout">
+            <section class="panel">
+              <div class="section-head"><h2>Novo lote</h2><span>Cadastro rápido</span></div>
+              <form id="lotForm" class="form-grid">
+                <label>Nome<input name="name" required placeholder="Lote leilão maio" /></label>
+                <label>Quantidade<input name="quantity" type="number" min="0" value="1" /></label>
+                <label>Entrada<input name="entryDate" type="date" /></label>
+                <label>@ aquisição<input name="purchaseArrobas" type="number" step="0.1" value="6.5" /></label>
+                <label>@ atual<input name="currentArrobas" type="number" step="0.1" value="7" /></label>
+                <label>Compra/cab<input name="purchasePricePerHead" type="number" step="1" value="1950" /></label>
+                <label>Categoria<input name="category" placeholder="Bezerra, novilha..." /></label>
+                <label>Origem<input name="origin" placeholder="Leilão, fazenda..." /></label>
+                <label>Idade estimada meses<input name="estimatedAgeMonths" type="number" step="1" /></label>
+                <label class="full">Notas<textarea name="notes" rows="3"></textarea></label>
+                <button type="submit">Cadastrar lote</button>
+              </form>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Animal individual</h2><span>Opcional</span></div>
+              <form id="animalForm" class="form-grid">
+                <label>Identificação<input name="tag" required placeholder="Brinco 024" /></label>
+                <label>Lote<select name="lotId" id="animalLotSelect"></select></label>
+                <label>@ atual<input name="currentArrobas" type="number" step="0.1" /></label>
+                <label>Entrada<input name="entryDate" type="date" /></label>
+                <button type="submit">Cadastrar animal</button>
+              </form>
+            </section>
+          </div>
+          <div class="split-layout">
+            <section class="panel">
+              <div class="section-head"><h2>Pesagem individual</h2></div>
+              <form id="weighingForm" class="form-grid">
+                <label>Animal<select name="animalId" id="weighingAnimalSelect"></select></label>
+                <label>Brinco / identificação<input name="tagSnapshot" placeholder="Preenchido pelo animal selecionado" /></label>
+                <label>Data<input name="date" type="date" /></label>
+                <label>Peso vivo kg<input name="weightKg" type="number" step="0.1" required /></label>
+                <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
+                <label class="full">Fotos/vídeos do animal<input name="animalPhoto" type="file" accept="image/*,video/*" multiple /></label>
+                <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
+                <button id="estimateWeightBtn" class="ghost-light" type="button">Estimar peso por IA</button>
+                <button type="submit">Registrar pesagem</button>
+              </form>
+              <div id="aiWeightResult" class="ai-weight-result"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Pesagem do lote</h2><span>Foto coletiva / peso médio</span></div>
+              <form id="lotWeighingForm" class="form-grid">
+                <label>Lote<select name="lotId" id="lotWeighingLotSelect"></select></label>
+                <label>Data<input name="date" type="date" /></label>
+                <label>Quantidade avaliada<input name="quantityEvaluated" type="number" min="1" /></label>
+                <label>Peso médio kg<input name="averageWeightKg" type="number" step="0.1" required /></label>
+                <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
+                <label class="full">Fotos/vídeos do lote<input name="lotPhoto" type="file" accept="image/*,video/*" multiple /></label>
+                <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
+                <button id="estimateLotWeightBtn" class="ghost-light" type="button">Estimar média do lote por IA</button>
+                <button type="submit">Registrar pesagem do lote</button>
+              </form>
+              <div id="aiLotWeightResult" class="ai-weight-result"></div>
+            </section>
+          </div>
+          <section class="panel">
+            <div class="section-head"><h2>Rebanho cadastrado</h2></div>
+            <div id="herdTables"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-costs">
+          <div class="split-layout">
+            <section class="panel">
+              <div class="section-head"><h2>Despesa</h2></div>
+              <form id="expenseForm" class="form-grid">
+                <label>Categoria<select name="expenseCategoryId" id="expenseCategorySelect"></select></label>
+                <label class="full">Descrição<input name="description" required placeholder="Suplemento, frete, sal..." /></label>
+                <label>Valor<input name="amount" type="number" step="0.01" required /></label>
+                <label>Data<input name="date" type="date" /></label>
+                <label>Rateio<select name="allocationMode" id="expenseAllocationMode"><option value="all_lots_by_headcount">Todos os lotes por cabeça</option><option value="specific_lots">Lotes selecionados por cabeça</option></select></label>
+                <label>Vincular a lotes<select name="lotIds" id="expenseLotSelect" multiple size="4" disabled></select></label>
+                <label class="full">Foto da nota<input name="receipt" type="file" accept="image/*" /></label>
+                <button type="submit">Lançar despesa</button>
+              </form>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Suplementos</h2></div>
+              <div id="supplementsTable"></div>
+            </section>
+          </div>
+          <section class="panel">
+            <div class="section-head"><h2>Histórico de custos</h2></div>
+            <div id="expensesTable"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Apropriação de custos por lote</h2>
+                <span>Compra, despesas na vigência do lote, custo por cabeça e por arroba</span>
+              </div>
+            </div>
+            <div id="costAppropriationReport"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-pastures">
+          <div class="split-layout">
+            <section class="panel">
+              <div class="section-head"><h2>Pastagem ou piquete</h2></div>
+              <form id="pastureForm" class="form-grid">
+                <label>Nome<input name="name" required placeholder="Piquete 01 / Pasto Acima Casa" /></label>
+                <label>Área ha<input name="areaHa" type="number" step="0.1" /></label>
+                <label>Suporte cab/ha<input name="carryingCapacityHeadHa" type="number" step="0.1" /></label>
+                <label>Forragem<input name="forageType" placeholder="Braquiária, mombaça..." /></label>
+                <label>Status<input name="status" placeholder="Bom, médio, secando" /></label>
+                <button type="submit">Cadastrar pasto</button>
+              </form>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Movimentação</h2></div>
+              <form id="movementForm" class="form-grid">
+                <label>Lote<select name="lotId" id="movementLotSelect"></select></label>
+                <label>Pasto<select name="pastureId" id="pastureSelect"></select></label>
+                <label>Tipo<select name="type"><option>Entrada</option><option>Saída</option></select></label>
+                <label>Data<input name="date" type="date" /></label>
+                <button type="submit">Registrar manejo</button>
+              </form>
+            </section>
+          </div>
+          <section class="panel">
+            <div class="section-head"><h2>Mapa operacional dos pastos e piquetes</h2></div>
+            <div id="pastureTables"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-market">
+          <div class="content-grid">
+            <section class="panel">
+              <div class="section-head">
+                <h2>Indicadores financeiros</h2>
+                <button id="importBcbBtn" class="link-button" type="button">Importar BCB</button>
+              </div>
+              <div id="financialIndicators"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head">
+                <h2>Cotação da arroba</h2>
+                <button id="importCepeaBtn" class="link-button" type="button">Importar CEPEA atual</button>
+              </div>
+              <form id="quoteForm" class="form-grid compact-form">
+                <label>Data<input name="date" type="date" /></label>
+                <label>Praça<input name="region" placeholder="Triângulo, Manual..." /></label>
+                <label>Categoria<select name="animalSex"><option value="mixed">Mista</option><option value="male">Macho / boi</option><option value="female">Fêmea / vaca</option></select></label>
+                <label>R$/@<input name="arrobaPrice" type="text" inputmode="decimal" /></label>
+                <label>Fonte<input name="source" placeholder="Cepea, corretor, manual..." /></label>
+                <button type="submit">Salvar cotação</button>
+              </form>
+              <div id="marketQuotes"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Insumos monitorados</h2></div>
+              <div id="marketSupplements"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Benchmark custo da @</h2></div>
+              <div id="marketCostBenchmarks"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="view-auction">
+          <section class="panel auction-panel">
+            <div class="section-head">
+              <div>
+                <h2>Comparador de lotes em leilão</h2>
+                <span>Compra, ganho até a meta, custo futuro, margem e ROI</span>
+              </div>
+              <div id="auctionWinner" class="status-pill">Aguardando cálculo</div>
+            </div>
+            <form id="auctionForm" class="auction-layout">
+              <fieldset class="auction-fieldset">
+                <legend>Premissas comuns</legend>
+                <div class="form-grid">
+                  <label>Meta de venda @<input name="targetArrobas" type="number" step="0.1" value="12" /></label>
+                  <label>Preço futuro R$/@<input name="arrobaPrice" type="text" inputmode="decimal" value="330" /></label>
+                  <label>GMD kg/dia<input name="gmdKgDay" type="number" step="0.05" value="0.5" /></label>
+                  <label>Comissão compra %<input name="commissionRate" type="number" step="0.1" value="0" /></label>
+                  <label>Mortalidade esperada %<input name="mortalityRate" type="number" step="0.1" value="0" /></label>
+                  <label>Custo op. R$/cab/dia<input name="operatingCostPerHeadDay" type="number" step="0.1" value="0" /></label>
+                  <label>Terra própria R$/cab/mês<input name="landOwnCostMonth" type="text" inputmode="decimal" value="0" /></label>
+                  <label>Proteinado % PV<input name="fortisPercentPv" type="number" step="0.1" value="0.1" /></label>
+                  <label>Proteico energético % PV<input name="comigoPercentPv" type="number" step="0.1" value="0.3" /></label>
+                  <label>CDI a.a. %<input name="cdiAnnualRate" type="number" step="0.01" /></label>
+                  <label>IPCA 12m %<input name="ipcaAnnualRate" type="number" step="0.01" /></label>
+                </div>
+              </fieldset>
+
+              <div class="auction-lot-grid">
+                <fieldset class="auction-fieldset" data-auction-card="a">
+                  <legend>Lote A</legend>
+                  <div class="form-grid">
+                    <label class="full">Nome<input name="lotAName" value="Lote A - animais leves" /></label>
+                    <label>Quantidade<input name="lotAQuantity" type="number" min="1" value="20" /></label>
+                    <label>@ por animal<input name="lotAArrobas" type="number" step="0.1" value="6" /></label>
+                    <label>Preço R$/@<input name="lotAPricePerArroba" type="text" inputmode="decimal" value="450" /></label>
+                    <label>Frete total<input name="lotAFreightTotal" type="text" inputmode="decimal" value="0" /></label>
+                    <label>M.O. aquisição<input name="lotALaborTotal" type="text" inputmode="decimal" value="0" /></label>
+                    <label>Custos iniciais<input name="lotAInitialCostsTotal" type="text" inputmode="decimal" value="0" /></label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="auction-fieldset" data-auction-card="b">
+                  <legend>Lote B</legend>
+                  <div class="form-grid">
+                    <label class="full">Nome<input name="lotBName" value="Lote B - animais pesados" /></label>
+                    <label>Quantidade<input name="lotBQuantity" type="number" min="1" value="20" /></label>
+                    <label>@ por animal<input name="lotBArrobas" type="number" step="0.1" value="8" /></label>
+                    <label>Preço R$/@<input name="lotBPricePerArroba" type="text" inputmode="decimal" value="270" /></label>
+                    <label>Frete total<input name="lotBFreightTotal" type="text" inputmode="decimal" value="0" /></label>
+                    <label>M.O. aquisição<input name="lotBLaborTotal" type="text" inputmode="decimal" value="0" /></label>
+                    <label>Custos iniciais<input name="lotBInitialCostsTotal" type="text" inputmode="decimal" value="0" /></label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <button type="submit">Comparar lotes</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <h2>Resultado da comparação</h2>
+              <span id="auctionInsight">Informe os lotes e calcule para ver a leitura financeira.</span>
+            </div>
+            <div id="auctionResult"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <h2>Histórico de comparações</h2>
+              <span>Últimas análises salvas automaticamente</span>
+            </div>
+            <div id="auctionHistory"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-loans">
+          <section class="panel auction-panel">
+            <div class="section-head">
+              <div>
+                <h2>Viabilidade com empréstimo</h2>
+                <span>Compra financiada, juros, caixa próprio, ROI alavancado e CDI</span>
+              </div>
+              <div id="loanDecision" class="status-pill">Aguardando simulação</div>
+            </div>
+            <form id="loanForm" class="auction-layout">
+              <fieldset class="auction-fieldset">
+                <legend>Compra dos animais</legend>
+                <div class="form-grid">
+                  <label>Nome do cenário<input name="scenarioName" value="Compra financiada" /></label>
+                  <label>Quantidade<input name="quantity" type="number" min="1" value="30" /></label>
+                  <label>@ compra<input name="purchaseArrobas" type="number" step="0.1" value="6" /></label>
+                  <label>Preço compra R$/@<input name="purchasePricePerArroba" type="text" inputmode="decimal" value="450" /></label>
+                  <label>Frete total<input name="freightTotal" type="text" inputmode="decimal" value="0" /></label>
+                  <label>Comissão compra %<input name="commissionRate" type="number" step="0.1" value="0" /></label>
+                  <label>M.O. aquisição<input name="acquisitionLaborTotal" type="text" inputmode="decimal" value="0" /></label>
+                  <label>Custos iniciais<input name="initialCostsTotal" type="text" inputmode="decimal" value="0" /></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="auction-fieldset">
+                <legend>Operação pecuária</legend>
+                <div class="form-grid">
+                  <label>Meta de venda @<input name="targetArrobas" type="number" step="0.1" value="12" /></label>
+                  <label>Preço futuro R$/@<input name="arrobaPrice" type="text" inputmode="decimal" value="330" /></label>
+                  <label>GMD kg/dia<input name="gmdKgDay" type="number" step="0.05" value="0.5" /></label>
+                  <label>Mortalidade esperada %<input name="mortalityRate" type="number" step="0.1" value="0" /></label>
+                  <label>Custo op. R$/cab/dia<input name="operatingCostPerHeadDay" type="number" step="0.1" value="0" /></label>
+                  <label>Terra própria R$/cab/mês<input name="landOwnCostMonth" type="text" inputmode="decimal" value="0" /></label>
+                  <label>Proteinado % PV<input name="fortisPercentPv" type="number" step="0.1" value="0.1" /></label>
+                  <label>Proteico energético % PV<input name="comigoPercentPv" type="number" step="0.1" value="0.3" /></label>
+                  <label>CDI a.a. %<input name="cdiAnnualRate" type="number" step="0.01" /></label>
+                  <label>IPCA 12m %<input name="ipcaAnnualRate" type="number" step="0.01" /></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="auction-fieldset">
+                <legend>Condições do empréstimo</legend>
+                <div class="form-grid">
+                  <label>Financiado %<input name="financedPercent" type="number" step="1" value="80" /></label>
+                  <label>Valor emprestado opcional<input name="loanPrincipal" type="text" inputmode="decimal" placeholder="se vazio, usa o %" /></label>
+                  <label>Juros % ao mês<input name="monthlyInterestRate" type="number" step="0.01" value="1.6" /></label>
+                  <label>Parcela banco opcional<input name="quotedMonthlyPayment" type="text" inputmode="decimal" placeholder="ex: 7666" /></label>
+                  <label>Prazo meses<input name="termMonths" type="number" min="1" step="1" value="12" /></label>
+                  <label>Carência meses<input name="graceMonths" type="number" min="0" step="1" value="0" /></label>
+                  <label>Amortização<select name="amortizationMode"><option value="price">PRICE / parcela fixa</option><option value="interest_only">Juros mensais + principal no fim</option><option value="bullet">Pagamento único no fim</option></select></label>
+                  <label>Tarifa %<input name="feeRate" type="number" step="0.1" value="0" /></label>
+                  <label>Tarifa fixa<input name="feeAmount" type="text" inputmode="decimal" value="0" /></label>
+                </div>
+              </fieldset>
+
+              <button type="submit">Simular empréstimo</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <h2>Resultado com dívida</h2>
+              <span id="loanInsight">Informe a compra e as condições do banco para calcular.</span>
+            </div>
+            <div id="loanResult"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-simulate">
+          <section class="panel decision-panel">
+            <div class="section-head">
+              <h2>Hipótese de venda</h2>
+              <span>GMD, meta e suplementação</span>
+            </div>
+            <form id="simulationForm" class="simulation-layout">
+              <div class="form-grid">
+                <label class="full">Lote cadastrado ou cenário avulso<select name="lotId" id="lotSelect"></select></label>
+                <label class="full" id="simulationBasisField">Base da simulação<select name="simulationBasis"><option value="current">Daqui para frente: usar peso atual</option><option value="acquisition">Operação completa: usar peso de aquisição</option></select></label>
+                <label>Nome do cenário<input name="scenarioName" placeholder="Leilão / oportunidade avulsa" /></label>
+                <label>Quantidade<input name="quantity" type="number" min="1" value="17" /></label>
+                <label>@ aquisição<input name="purchaseArrobas" type="number" step="0.1" value="6.5" /></label>
+                <label id="currentArrobasField">@ atual<input name="currentArrobas" type="number" step="0.1" value="6.5" /></label>
+                <label id="purchaseValueField">Valor de compra<input name="purchasePricePerHead" type="number" step="1" value="1950" /></label>
+                <label id="purchaseArrobaPriceField">Custo compra R$/@<input name="purchasePricePerArroba" type="text" inputmode="decimal" placeholder="calculado automaticamente" readonly /></label>
+                <label>Frete total<input name="freightTotal" type="text" inputmode="decimal" value="0" /></label>
+                <label>Comissão %<input name="commissionRate" type="number" step="0.1" value="0" /></label>
+                <label>M.O. aquisição<input name="acquisitionLaborTotal" type="text" inputmode="decimal" value="0" /></label>
+                <label>Custos iniciais<input name="initialCostsTotal" type="text" inputmode="decimal" value="0" /></label>
+                <label>Mortalidade esperada %<input name="mortalityRate" type="number" step="0.1" value="0" /></label>
+                <label>Taxa desconto a.a. %<input name="discountRate" type="number" step="0.1" /></label>
+                <label>Meta de venda @<input name="targetArrobas" type="number" step="0.1" value="10.5" /></label>
+                <label>GMD kg/dia<input name="gmdKgDay" type="number" step="0.05" value="0.5" /></label>
+                <label id="saleArrobaPriceField">Preço @<input name="arrobaPrice" type="text" inputmode="decimal" value="330" /></label>
+                <label id="arrobaCategoryField">Tipo da @<select name="arrobaCategory"><option value="mixed">Mista</option><option value="male">Macho / boi</option><option value="female">Fêmea / vaca</option></select></label>
+                <label id="marketQuoteField">Cotação de referência<select name="marketQuoteId" id="simulationQuoteSelect"></select></label>
+                <label id="futureArrobaChangeField">Variação futura %<input name="futureArrobaChange" type="number" step="0.1" value="0" /></label>
+                <label>Proteinado % PV<input name="fortisPercentPv" type="number" step="0.1" value="0.1" /></label>
+                <label>Proteico energético % PV<input name="comigoPercentPv" type="number" step="0.1" value="0.3" /></label>
+                <label>Custo op. R$/cab/dia<input name="operatingCostPerHeadDay" type="number" step="0.1" value="0" /></label>
+                <label>Terra própria R$/cab/mês<input name="landOwnCostMonth" type="text" inputmode="decimal" value="0" /></label>
+                <label>CDI a.a. %<input name="cdiAnnualRate" type="number" step="0.01" /></label>
+                <label>IPCA 12m %<input name="ipcaAnnualRate" type="number" step="0.01" /></label>
+                <button type="submit">Calcular viabilidade</button>
+              </div>
+              <div id="decisionSummary" class="decision-summary"></div>
+            </form>
+            <div id="selectedLotContext" class="result-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head"><h2>Resultado econômico</h2></div>
+            <div id="simulationResult" class="result-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head">
+              <h2>Histórico de simulações</h2>
+              <div class="row-actions">
+                <button id="deleteSelectedSimulationsBtn" class="small-button danger-button" type="button">Excluir selecionadas</button>
+                <button id="deleteAllSimulationsBtn" class="small-button danger-button" type="button">Excluir tudo</button>
+              </div>
+            </div>
+            <div id="simulationHistory"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-ai">
+          <section class="panel">
+            <div class="section-head">
+              <h2>Motores de IA</h2>
+              <span>OpenAI / Gemini</span>
+            </div>
+            <div class="ai-placeholder">
+              <strong>Endpoint preparado</strong>
+              <p>O próximo passo é configurar provedor, chave, trilha de auditoria e prompts de análise para explicar cenários e validar hipóteses sem misturar dado operacional com palpite.</p>
+              <div id="aiInsights" class="ai-insights"></div>
+              <button id="testAiBtn" type="button">Testar contrato da IA</button>
+              <pre id="aiResult"></pre>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="editDialog" class="edit-dialog">
+      <form id="editForm" method="dialog">
+        <div class="section-head">
+          <h2 id="editTitle">Editar registro</h2>
+          <button id="closeEditBtn" class="link-button" type="button">Fechar</button>
+        </div>
+        <div id="editFields" class="form-grid"></div>
+        <div class="dialog-actions">
+          <button class="ghost-light" type="button" id="cancelEditBtn">Cancelar</button>
+          <button type="submit">Salvar alterações</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="simulationDialog" class="edit-dialog simulation-dialog">
+      <div class="section-head">
+        <h2>Simulação registrada</h2>
+        <button id="closeSimulationBtn" class="link-button" type="button">Fechar</button>
+      </div>
+      <div id="simulationDetails" class="result-grid"></div>
+    </dialog>
+
+    <dialog id="receiptDialog" class="edit-dialog receipt-dialog">
+      <div class="section-head">
+        <h2>Comprovante vinculado</h2>
+        <button id="closeReceiptBtn" class="link-button" type="button">Fechar</button>
+      </div>
+      <img id="receiptPreview" alt="Comprovante da despesa" />
+    </dialog>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

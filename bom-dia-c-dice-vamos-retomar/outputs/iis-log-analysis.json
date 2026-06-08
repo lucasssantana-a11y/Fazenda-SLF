@@ -1,0 +1,4368 @@
+{
+  "file": "/Users/lucassantana/Downloads/u_ex260528_x.log",
+  "lineCount": 428151,
+  "dataRows": 428142,
+  "period": {
+    "firstTs": "2026-05-27T23:59:56Z",
+    "lastTs": "2026-05-28T06:26:45Z"
+  },
+  "global": {
+    "count": 428142,
+    "avgMs": 900.3749480312606,
+    "p50Ms": 163,
+    "p90Ms": 2339,
+    "p95Ms": 4054,
+    "p99Ms": 9357,
+    "minMs": 0,
+    "maxMs": 365605,
+    "slowCount1s": 86107,
+    "slowCount5s": 14160,
+    "slowCount10s": 3840,
+    "errors": 9036,
+    "statuses": {
+      "0": 9059,
+      "200": 410046,
+      "302": 1,
+      "404": 9036
+    }
+  },
+  "methods": [
+    {
+      "key": "POST",
+      "count": 376798
+    },
+    {
+      "key": "GET",
+      "count": 51344
+    }
+  ],
+  "statuses": [
+    {
+      "key": "200.0.0",
+      "count": 410035
+    },
+    {
+      "key": "404.0.2",
+      "count": 9036
+    },
+    {
+      "key": "0.0.0",
+      "count": 9035
+    },
+    {
+      "key": "0.0.64",
+      "count": 24
+    },
+    {
+      "key": "200.0.64",
+      "count": 11
+    },
+    {
+      "key": "302.0.0",
+      "count": 1
+    }
+  ],
+  "clients": [
+    {
+      "key": "10.225.14.8",
+      "count": 401200
+    },
+    {
+      "key": "10.225.14.7",
+      "count": 13472
+    },
+    {
+      "key": "10.225.14.6",
+      "count": 13470
+    }
+  ],
+  "userAgents": [
+    {
+      "key": "Borland SOAP",
+      "count": 135725
+    },
+    {
+      "key": "sem user-agent",
+      "count": 130174
+    },
+    {
+      "key": "Mozilla/legacy",
+      "count": 57188
+    },
+    {
+      "key": "CodeGear+SOAP+1.3",
+      "count": 26378
+    },
+    {
+      "key": "SOAP Toolkit",
+      "count": 10221
+    },
+    {
+      "key": "NuSOAP",
+      "count": 9484
+    },
+    {
+      "key": "Apache HttpClient",
+      "count": 9478
+    },
+    {
+      "key": "Java",
+      "count": 9390
+    },
+    {
+      "key": "Apache CXF",
+      "count": 7952
+    },
+    {
+      "key": "gefin",
+      "count": 6029
+    },
+    {
+      "key": "Zabbix",
+      "count": 5097
+    },
+    {
+      "key": "Remoting+SDK",
+      "count": 4947
+    },
+    {
+      "key": ".NET Web Services",
+      "count": 3095
+    },
+    {
+      "key": "InterSystems IRIS",
+      "count": 2293
+    },
+    {
+      "key": "node-soap/1.5.0",
+      "count": 1886
+    },
+    {
+      "key": "Axis/1.4",
+      "count": 1632
+    },
+    {
+      "key": "PHP-SOAP/7.2.34",
+      "count": 1426
+    },
+    {
+      "key": "PHP-SOAP/7.4.33",
+      "count": 1137
+    },
+    {
+      "key": "Embarcadero+SOAP+1.4",
+      "count": 1002
+    },
+    {
+      "key": "PHP-SOAP/8.2.30",
+      "count": 874
+    }
+  ],
+  "queries": [
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl",
+      "count": 168845
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?xsd=xsd0",
+      "count": 5501
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl0",
+      "count": 1684
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl1",
+      "count": 1654
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?singleWsdl",
+      "count": 1585
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?singlewsdl",
+      "count": 15
+    },
+    {
+      "key": "/dbsync/wsrvProtocoloDBSync.dbsync.svc?WSDL",
+      "count": 1
+    }
+  ],
+  "topEndpointsByVolume": [
+    {
+      "key": "SOAP:ConsultaStatusAtendimento",
+      "count": 166167,
+      "avgMs": 494.6280007462372,
+      "p50Ms": 155,
+      "p90Ms": 747,
+      "p95Ms": 2492,
+      "p99Ms": 6146,
+      "minMs": 30,
+      "maxMs": 24827,
+      "slowCount1s": 15447,
+      "slowCount5s": 2667,
+      "slowCount10s": 288,
+      "errors": 0,
+      "statuses": {
+        "0": 11,
+        "200": 166156
+      }
+    },
+    {
+      "key": "SOAP:BuscaPendenciasMPP",
+      "count": 42820,
+      "avgMs": 651.1518449322747,
+      "p50Ms": 119,
+      "p90Ms": 2143,
+      "p95Ms": 3409,
+      "p99Ms": 6275,
+      "minMs": 50,
+      "maxMs": 21184,
+      "slowCount1s": 7580,
+      "slowCount5s": 804,
+      "slowCount10s": 77,
+      "errors": 0,
+      "statuses": {
+        "200": 42820
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoLista",
+      "count": 38550,
+      "avgMs": 2223.472036316472,
+      "p50Ms": 387,
+      "p90Ms": 4194,
+      "p95Ms": 7977,
+      "p99Ms": 30246,
+      "minMs": 31,
+      "maxMs": 365605,
+      "slowCount1s": 13505,
+      "slowCount5s": 3106,
+      "slowCount10s": 1568,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 38548
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimento",
+      "count": 33435,
+      "avgMs": 1577.5933602512337,
+      "p50Ms": 507,
+      "p90Ms": 4054,
+      "p95Ms": 6244,
+      "p99Ms": 15153,
+      "minMs": 12,
+      "maxMs": 91097,
+      "slowCount1s": 10825,
+      "slowCount5s": 2368,
+      "slowCount10s": 676,
+      "errors": 0,
+      "statuses": {
+        "0": 8,
+        "200": 33427
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultados",
+      "count": 32344,
+      "avgMs": 959.8873361365323,
+      "p50Ms": 196,
+      "p90Ms": 2757,
+      "p95Ms": 4294,
+      "p99Ms": 9023,
+      "minMs": 20,
+      "maxMs": 67344,
+      "slowCount1s": 7305,
+      "slowCount5s": 1198,
+      "slowCount10s": 257,
+      "errors": 0,
+      "statuses": {
+        "200": 32344
+      }
+    },
+    {
+      "key": "SOAP:EnviaResultadoBase64",
+      "count": 19325,
+      "avgMs": 940.7208796895213,
+      "p50Ms": 263,
+      "p90Ms": 2843,
+      "p95Ms": 4400,
+      "p99Ms": 8231,
+      "minMs": 52,
+      "maxMs": 32591,
+      "slowCount1s": 3905,
+      "slowCount5s": 765,
+      "slowCount10s": 109,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 19323
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultadosV3",
+      "count": 15824,
+      "avgMs": 612.9127906976744,
+      "p50Ms": 141,
+      "p90Ms": 1835,
+      "p95Ms": 3240,
+      "p99Ms": 6177,
+      "minMs": 34,
+      "maxMs": 42165,
+      "slowCount1s": 2556,
+      "slowCount5s": 284,
+      "slowCount10s": 42,
+      "errors": 0,
+      "statuses": {
+        "200": 15824
+      }
+    },
+    {
+      "key": "SOAP:RecebeAtendimento",
+      "count": 11904,
+      "avgMs": 2300.7405913978496,
+      "p50Ms": 1123,
+      "p90Ms": 4964,
+      "p95Ms": 6670,
+      "p99Ms": 10760,
+      "minMs": 31,
+      "maxMs": 23365,
+      "slowCount1s": 11893,
+      "slowCount5s": 1167,
+      "slowCount10s": 158,
+      "errors": 0,
+      "statuses": {
+        "200": 11904
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "count": 10681,
+      "avgMs": 292.73991199325906,
+      "p50Ms": 1,
+      "p90Ms": 1273,
+      "p95Ms": 1853,
+      "p99Ms": 3399,
+      "minMs": 0,
+      "maxMs": 7041,
+      "slowCount1s": 1356,
+      "slowCount5s": 16,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 10681
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoV3",
+      "count": 9654,
+      "avgMs": 1663.5823492852703,
+      "p50Ms": 328,
+      "p90Ms": 4142,
+      "p95Ms": 6605,
+      "p99Ms": 16769,
+      "minMs": 20,
+      "maxMs": 79584,
+      "slowCount1s": 3726,
+      "slowCount5s": 768,
+      "slowCount10s": 266,
+      "errors": 0,
+      "statuses": {
+        "200": 9654
+      }
+    },
+    {
+      "key": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 9036,
+      "avgMs": 0.565294378043382,
+      "p50Ms": 0,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 378,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 9036,
+      "statuses": {
+        "404": 9036
+      }
+    },
+    {
+      "key": "GET /",
+      "count": 9035,
+      "avgMs": 0.5949086884338682,
+      "p50Ms": 1,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 81,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 9035
+      }
+    },
+    {
+      "key": "GET /dbsync/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 8871,
+      "avgMs": 494.59159057603426,
+      "p50Ms": 18,
+      "p90Ms": 1582,
+      "p95Ms": 2100,
+      "p99Ms": 5616,
+      "minMs": 5,
+      "maxMs": 33728,
+      "slowCount1s": 1468,
+      "slowCount5s": 110,
+      "slowCount10s": 35,
+      "errors": 0,
+      "statuses": {
+        "200": 8871
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?xsd=xsd0",
+      "count": 5501,
+      "avgMs": 502.7954917287766,
+      "p50Ms": 3,
+      "p90Ms": 1785,
+      "p95Ms": 2132,
+      "p99Ms": 4354,
+      "minMs": 2,
+      "maxMs": 7321,
+      "slowCount1s": 1247,
+      "slowCount5s": 25,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 5501
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoListaV3",
+      "count": 5158,
+      "avgMs": 1877.0091120589375,
+      "p50Ms": 334,
+      "p90Ms": 4485,
+      "p95Ms": 6598,
+      "p99Ms": 18113,
+      "minMs": 99,
+      "maxMs": 88589,
+      "slowCount1s": 1993,
+      "slowCount5s": 432,
+      "slowCount10s": 139,
+      "errors": 0,
+      "statuses": {
+        "200": 5158
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl",
+      "count": 1830,
+      "avgMs": 604.5131147540984,
+      "p50Ms": 1,
+      "p90Ms": 1862,
+      "p95Ms": 2268,
+      "p99Ms": 4507,
+      "minMs": 0,
+      "maxMs": 6003,
+      "slowCount1s": 495,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 1,
+        "200": 1829
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl0",
+      "count": 1684,
+      "avgMs": 626.6383610451306,
+      "p50Ms": 1,
+      "p90Ms": 1897,
+      "p95Ms": 2227,
+      "p99Ms": 4041,
+      "minMs": 0,
+      "maxMs": 8233,
+      "slowCount1s": 485,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1684
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl1",
+      "count": 1654,
+      "avgMs": 605.6529625151148,
+      "p50Ms": 1,
+      "p90Ms": 1858,
+      "p95Ms": 2256,
+      "p99Ms": 4522,
+      "minMs": 0,
+      "maxMs": 7509,
+      "slowCount1s": 451,
+      "slowCount5s": 10,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1654
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singleWsdl",
+      "count": 1585,
+      "avgMs": 363.9305993690852,
+      "p50Ms": 3,
+      "p90Ms": 1485,
+      "p95Ms": 1898,
+      "p99Ms": 3619,
+      "minMs": 2,
+      "maxMs": 8125,
+      "slowCount1s": 242,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1585
+      }
+    },
+    {
+      "key": "GET /dbsync/wfrmErro.aspx",
+      "count": 1450,
+      "avgMs": 866.8868965517241,
+      "p50Ms": 539,
+      "p90Ms": 2170,
+      "p95Ms": 3165,
+      "p99Ms": 4794,
+      "minMs": 3,
+      "maxMs": 9447,
+      "slowCount1s": 539,
+      "slowCount5s": 12,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1450
+      }
+    },
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodo",
+      "count": 570,
+      "avgMs": 8497.108771929825,
+      "p50Ms": 1816,
+      "p90Ms": 22595,
+      "p95Ms": 38046,
+      "p99Ms": 99994,
+      "minMs": 55,
+      "maxMs": 203564,
+      "slowCount1s": 385,
+      "slowCount5s": 184,
+      "slowCount10s": 118,
+      "errors": 0,
+      "statuses": {
+        "200": 570
+      }
+    },
+    {
+      "key": "SOAP:BuscaProcedimentos",
+      "count": 307,
+      "avgMs": 8648.85667752443,
+      "p50Ms": 3653,
+      "p90Ms": 21231,
+      "p95Ms": 32175,
+      "p99Ms": 47566,
+      "minMs": 1951,
+      "maxMs": 61660,
+      "slowCount1s": 307,
+      "slowCount5s": 114,
+      "slowCount10s": 74,
+      "errors": 0,
+      "statuses": {
+        "200": 307
+      }
+    },
+    {
+      "key": "SOAP:BuscaExamesConfigAdicionais",
+      "count": 265,
+      "avgMs": 2968.8603773584905,
+      "p50Ms": 1065,
+      "p90Ms": 7581,
+      "p95Ms": 10147,
+      "p99Ms": 15013,
+      "minMs": 497,
+      "maxMs": 21452,
+      "slowCount1s": 144,
+      "slowCount5s": 56,
+      "slowCount10s": 15,
+      "errors": 0,
+      "statuses": {
+        "200": 265
+      }
+    },
+    {
+      "key": "SOAP:GetInformacoesExameAdicionais",
+      "count": 212,
+      "avgMs": 1493.0754716981132,
+      "p50Ms": 364,
+      "p90Ms": 4049,
+      "p95Ms": 5746,
+      "p99Ms": 11787,
+      "minMs": 128,
+      "maxMs": 16677,
+      "slowCount1s": 72,
+      "slowCount5s": 13,
+      "slowCount10s": 4,
+      "errors": 0,
+      "statuses": {
+        "200": 212
+      }
+    },
+    {
+      "key": "SOAP:ListaProcedimentosPendentes",
+      "count": 176,
+      "avgMs": 2129.0454545454545,
+      "p50Ms": 1890,
+      "p90Ms": 4720,
+      "p95Ms": 5616,
+      "p99Ms": 8759,
+      "minMs": 277,
+      "maxMs": 9930,
+      "slowCount1s": 114,
+      "slowCount5s": 13,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 176
+      }
+    },
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodoV3",
+      "count": 37,
+      "avgMs": 13421.945945945947,
+      "p50Ms": 4822,
+      "p90Ms": 40984,
+      "p95Ms": 54376,
+      "p99Ms": 72419,
+      "minMs": 615,
+      "maxMs": 72419,
+      "slowCount1s": 36,
+      "slowCount5s": 17,
+      "slowCount10s": 13,
+      "errors": 0,
+      "statuses": {
+        "200": 37
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostras",
+      "count": 30,
+      "avgMs": 2665.9333333333334,
+      "p50Ms": 1218,
+      "p90Ms": 5661,
+      "p95Ms": 7817,
+      "p99Ms": 15340,
+      "minMs": 171,
+      "maxMs": 15340,
+      "slowCount1s": 17,
+      "slowCount5s": 5,
+      "slowCount10s": 1,
+      "errors": 0,
+      "statuses": {
+        "200": 30
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostrasProcedimentosPendentes",
+      "count": 19,
+      "avgMs": 2582.6315789473683,
+      "p50Ms": 1503,
+      "p90Ms": 6868,
+      "p95Ms": 7252,
+      "p99Ms": 7252,
+      "minMs": 45,
+      "maxMs": 7252,
+      "slowCount1s": 10,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 19
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singlewsdl",
+      "count": 15,
+      "avgMs": 487.53333333333336,
+      "p50Ms": 3,
+      "p90Ms": 2584,
+      "p95Ms": 3395,
+      "p99Ms": 3395,
+      "minMs": 2,
+      "maxMs": 3395,
+      "slowCount1s": 3,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 15
+      }
+    },
+    {
+      "key": "GET /dbsync/images/apple-touch-icon.png",
+      "count": 1,
+      "avgMs": 2,
+      "p50Ms": 2,
+      "p90Ms": 2,
+      "p95Ms": 2,
+      "p99Ms": 2,
+      "minMs": 2,
+      "maxMs": 2,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1
+      }
+    }
+  ],
+  "topSoapByVolume": [
+    {
+      "key": "ConsultaStatusAtendimento",
+      "count": 166167,
+      "avgMs": 494.6280007462372,
+      "p50Ms": 155,
+      "p90Ms": 747,
+      "p95Ms": 2492,
+      "p99Ms": 6146,
+      "minMs": 30,
+      "maxMs": 24827,
+      "slowCount1s": 15447,
+      "slowCount5s": 2667,
+      "slowCount10s": 288,
+      "errors": 0,
+      "statuses": {
+        "0": 11,
+        "200": 166156
+      }
+    },
+    {
+      "key": "BuscaPendenciasMPP",
+      "count": 42820,
+      "avgMs": 651.1518449322747,
+      "p50Ms": 119,
+      "p90Ms": 2143,
+      "p95Ms": 3409,
+      "p99Ms": 6275,
+      "minMs": 50,
+      "maxMs": 21184,
+      "slowCount1s": 7580,
+      "slowCount5s": 804,
+      "slowCount10s": 77,
+      "errors": 0,
+      "statuses": {
+        "200": 42820
+      }
+    },
+    {
+      "key": "EnviaLaudoAtendimentoLista",
+      "count": 38550,
+      "avgMs": 2223.472036316472,
+      "p50Ms": 387,
+      "p90Ms": 4194,
+      "p95Ms": 7977,
+      "p99Ms": 30246,
+      "minMs": 31,
+      "maxMs": 365605,
+      "slowCount1s": 13505,
+      "slowCount5s": 3106,
+      "slowCount10s": 1568,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 38548
+      }
+    },
+    {
+      "key": "EnviaLaudoAtendimento",
+      "count": 33435,
+      "avgMs": 1577.5933602512337,
+      "p50Ms": 507,
+      "p90Ms": 4054,
+      "p95Ms": 6244,
+      "p99Ms": 15153,
+      "minMs": 12,
+      "maxMs": 91097,
+      "slowCount1s": 10825,
+      "slowCount5s": 2368,
+      "slowCount10s": 676,
+      "errors": 0,
+      "statuses": {
+        "0": 8,
+        "200": 33427
+      }
+    },
+    {
+      "key": "EnviaLoteResultados",
+      "count": 32344,
+      "avgMs": 959.8873361365323,
+      "p50Ms": 196,
+      "p90Ms": 2757,
+      "p95Ms": 4294,
+      "p99Ms": 9023,
+      "minMs": 20,
+      "maxMs": 67344,
+      "slowCount1s": 7305,
+      "slowCount5s": 1198,
+      "slowCount10s": 257,
+      "errors": 0,
+      "statuses": {
+        "200": 32344
+      }
+    },
+    {
+      "key": "EnviaResultadoBase64",
+      "count": 19325,
+      "avgMs": 940.7208796895213,
+      "p50Ms": 263,
+      "p90Ms": 2843,
+      "p95Ms": 4400,
+      "p99Ms": 8231,
+      "minMs": 52,
+      "maxMs": 32591,
+      "slowCount1s": 3905,
+      "slowCount5s": 765,
+      "slowCount10s": 109,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 19323
+      }
+    },
+    {
+      "key": "EnviaLoteResultadosV3",
+      "count": 15824,
+      "avgMs": 612.9127906976744,
+      "p50Ms": 141,
+      "p90Ms": 1835,
+      "p95Ms": 3240,
+      "p99Ms": 6177,
+      "minMs": 34,
+      "maxMs": 42165,
+      "slowCount1s": 2556,
+      "slowCount5s": 284,
+      "slowCount10s": 42,
+      "errors": 0,
+      "statuses": {
+        "200": 15824
+      }
+    },
+    {
+      "key": "RecebeAtendimento",
+      "count": 11904,
+      "avgMs": 2300.7405913978496,
+      "p50Ms": 1123,
+      "p90Ms": 4964,
+      "p95Ms": 6670,
+      "p99Ms": 10760,
+      "minMs": 31,
+      "maxMs": 23365,
+      "slowCount1s": 11893,
+      "slowCount5s": 1167,
+      "slowCount10s": 158,
+      "errors": 0,
+      "statuses": {
+        "200": 11904
+      }
+    },
+    {
+      "key": "EnviaLaudoAtendimentoV3",
+      "count": 9654,
+      "avgMs": 1663.5823492852703,
+      "p50Ms": 328,
+      "p90Ms": 4142,
+      "p95Ms": 6605,
+      "p99Ms": 16769,
+      "minMs": 20,
+      "maxMs": 79584,
+      "slowCount1s": 3726,
+      "slowCount5s": 768,
+      "slowCount10s": 266,
+      "errors": 0,
+      "statuses": {
+        "200": 9654
+      }
+    },
+    {
+      "key": "EnviaLaudoAtendimentoListaV3",
+      "count": 5158,
+      "avgMs": 1877.0091120589375,
+      "p50Ms": 334,
+      "p90Ms": 4485,
+      "p95Ms": 6598,
+      "p99Ms": 18113,
+      "minMs": 99,
+      "maxMs": 88589,
+      "slowCount1s": 1993,
+      "slowCount5s": 432,
+      "slowCount10s": 139,
+      "errors": 0,
+      "statuses": {
+        "200": 5158
+      }
+    },
+    {
+      "key": "BuscaResultadosPorPeriodo",
+      "count": 570,
+      "avgMs": 8497.108771929825,
+      "p50Ms": 1816,
+      "p90Ms": 22595,
+      "p95Ms": 38046,
+      "p99Ms": 99994,
+      "minMs": 55,
+      "maxMs": 203564,
+      "slowCount1s": 385,
+      "slowCount5s": 184,
+      "slowCount10s": 118,
+      "errors": 0,
+      "statuses": {
+        "200": 570
+      }
+    },
+    {
+      "key": "BuscaProcedimentos",
+      "count": 307,
+      "avgMs": 8648.85667752443,
+      "p50Ms": 3653,
+      "p90Ms": 21231,
+      "p95Ms": 32175,
+      "p99Ms": 47566,
+      "minMs": 1951,
+      "maxMs": 61660,
+      "slowCount1s": 307,
+      "slowCount5s": 114,
+      "slowCount10s": 74,
+      "errors": 0,
+      "statuses": {
+        "200": 307
+      }
+    },
+    {
+      "key": "BuscaExamesConfigAdicionais",
+      "count": 265,
+      "avgMs": 2968.8603773584905,
+      "p50Ms": 1065,
+      "p90Ms": 7581,
+      "p95Ms": 10147,
+      "p99Ms": 15013,
+      "minMs": 497,
+      "maxMs": 21452,
+      "slowCount1s": 144,
+      "slowCount5s": 56,
+      "slowCount10s": 15,
+      "errors": 0,
+      "statuses": {
+        "200": 265
+      }
+    },
+    {
+      "key": "GetInformacoesExameAdicionais",
+      "count": 212,
+      "avgMs": 1493.0754716981132,
+      "p50Ms": 364,
+      "p90Ms": 4049,
+      "p95Ms": 5746,
+      "p99Ms": 11787,
+      "minMs": 128,
+      "maxMs": 16677,
+      "slowCount1s": 72,
+      "slowCount5s": 13,
+      "slowCount10s": 4,
+      "errors": 0,
+      "statuses": {
+        "200": 212
+      }
+    },
+    {
+      "key": "ListaProcedimentosPendentes",
+      "count": 176,
+      "avgMs": 2129.0454545454545,
+      "p50Ms": 1890,
+      "p90Ms": 4720,
+      "p95Ms": 5616,
+      "p99Ms": 8759,
+      "minMs": 277,
+      "maxMs": 9930,
+      "slowCount1s": 114,
+      "slowCount5s": 13,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 176
+      }
+    },
+    {
+      "key": "BuscaResultadosPorPeriodoV3",
+      "count": 37,
+      "avgMs": 13421.945945945947,
+      "p50Ms": 4822,
+      "p90Ms": 40984,
+      "p95Ms": 54376,
+      "p99Ms": 72419,
+      "minMs": 615,
+      "maxMs": 72419,
+      "slowCount1s": 36,
+      "slowCount5s": 17,
+      "slowCount10s": 13,
+      "errors": 0,
+      "statuses": {
+        "200": 37
+      }
+    },
+    {
+      "key": "EnviaAmostras",
+      "count": 30,
+      "avgMs": 2665.9333333333334,
+      "p50Ms": 1218,
+      "p90Ms": 5661,
+      "p95Ms": 7817,
+      "p99Ms": 15340,
+      "minMs": 171,
+      "maxMs": 15340,
+      "slowCount1s": 17,
+      "slowCount5s": 5,
+      "slowCount10s": 1,
+      "errors": 0,
+      "statuses": {
+        "200": 30
+      }
+    },
+    {
+      "key": "EnviaAmostrasProcedimentosPendentes",
+      "count": 19,
+      "avgMs": 2582.6315789473683,
+      "p50Ms": 1503,
+      "p90Ms": 6868,
+      "p95Ms": 7252,
+      "p99Ms": 7252,
+      "minMs": 45,
+      "maxMs": 7252,
+      "slowCount1s": 10,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 19
+      }
+    }
+  ],
+  "topUriByVolume": [
+    {
+      "key": "POST /dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "count": 373735,
+      "avgMs": 982.3631664147056,
+      "p50Ms": 174,
+      "p90Ms": 2528,
+      "p95Ms": 4271,
+      "p99Ms": 10058,
+      "minMs": 12,
+      "maxMs": 365605,
+      "slowCount1s": 79079,
+      "slowCount5s": 13838,
+      "slowCount10s": 3778,
+      "errors": 0,
+      "statuses": {
+        "0": 23,
+        "200": 373712
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "count": 22951,
+      "avgMs": 420.07603154546644,
+      "p50Ms": 2,
+      "p90Ms": 1654,
+      "p95Ms": 2051,
+      "p99Ms": 3943,
+      "minMs": 0,
+      "maxMs": 8233,
+      "slowCount1s": 4280,
+      "slowCount5s": 73,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 1,
+        "200": 22950
+      }
+    },
+    {
+      "key": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 9036,
+      "avgMs": 0.565294378043382,
+      "p50Ms": 0,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 378,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 9036,
+      "statuses": {
+        "404": 9036
+      }
+    },
+    {
+      "key": "GET /",
+      "count": 9035,
+      "avgMs": 0.5949086884338682,
+      "p50Ms": 1,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 81,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 9035
+      }
+    },
+    {
+      "key": "GET /dbsync/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 8871,
+      "avgMs": 494.59159057603426,
+      "p50Ms": 18,
+      "p90Ms": 1582,
+      "p95Ms": 2100,
+      "p99Ms": 5616,
+      "minMs": 5,
+      "maxMs": 33728,
+      "slowCount1s": 1468,
+      "slowCount5s": 110,
+      "slowCount10s": 35,
+      "errors": 0,
+      "statuses": {
+        "200": 8871
+      }
+    },
+    {
+      "key": "POST /dbsync/wsrvProtocoloDBSync.DBSync.svc",
+      "count": 2585,
+      "avgMs": 752.3756286266924,
+      "p50Ms": 122,
+      "p90Ms": 2401,
+      "p95Ms": 3739,
+      "p99Ms": 7341,
+      "minMs": 73,
+      "maxMs": 14424,
+      "slowCount1s": 525,
+      "slowCount5s": 58,
+      "slowCount10s": 8,
+      "errors": 0,
+      "statuses": {
+        "200": 2585
+      }
+    },
+    {
+      "key": "GET /dbsync/wfrmErro.aspx",
+      "count": 1450,
+      "avgMs": 866.8868965517241,
+      "p50Ms": 539,
+      "p90Ms": 2170,
+      "p95Ms": 3165,
+      "p99Ms": 4794,
+      "minMs": 3,
+      "maxMs": 9447,
+      "slowCount1s": 539,
+      "slowCount5s": 12,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1450
+      }
+    },
+    {
+      "key": "POST /dbsync/wsrvDadosDB.DADOSDB.svc",
+      "count": 477,
+      "avgMs": 2312.9559748427673,
+      "p50Ms": 903,
+      "p90Ms": 6180,
+      "p95Ms": 8934,
+      "p99Ms": 14522,
+      "minMs": 128,
+      "maxMs": 21452,
+      "slowCount1s": 216,
+      "slowCount5s": 69,
+      "slowCount10s": 19,
+      "errors": 0,
+      "statuses": {
+        "200": 477
+      }
+    },
+    {
+      "key": "GET /dbsync/images/apple-touch-icon.png",
+      "count": 1,
+      "avgMs": 2,
+      "p50Ms": 2,
+      "p90Ms": 2,
+      "p95Ms": 2,
+      "p99Ms": 2,
+      "minMs": 2,
+      "maxMs": 2,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1
+      }
+    },
+    {
+      "key": "POST /dbsync/wfrmErro.aspx",
+      "count": 1,
+      "avgMs": 504,
+      "p50Ms": 504,
+      "p90Ms": 504,
+      "p95Ms": 504,
+      "p99Ms": 504,
+      "minMs": 504,
+      "maxMs": 504,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "302": 1
+      }
+    }
+  ],
+  "slowEndpointsP95": [
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodoV3",
+      "count": 37,
+      "avgMs": 13421.945945945947,
+      "p50Ms": 4822,
+      "p90Ms": 40984,
+      "p95Ms": 54376,
+      "p99Ms": 72419,
+      "minMs": 615,
+      "maxMs": 72419,
+      "slowCount1s": 36,
+      "slowCount5s": 17,
+      "slowCount10s": 13,
+      "errors": 0,
+      "statuses": {
+        "200": 37
+      }
+    },
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodo",
+      "count": 570,
+      "avgMs": 8497.108771929825,
+      "p50Ms": 1816,
+      "p90Ms": 22595,
+      "p95Ms": 38046,
+      "p99Ms": 99994,
+      "minMs": 55,
+      "maxMs": 203564,
+      "slowCount1s": 385,
+      "slowCount5s": 184,
+      "slowCount10s": 118,
+      "errors": 0,
+      "statuses": {
+        "200": 570
+      }
+    },
+    {
+      "key": "SOAP:BuscaProcedimentos",
+      "count": 307,
+      "avgMs": 8648.85667752443,
+      "p50Ms": 3653,
+      "p90Ms": 21231,
+      "p95Ms": 32175,
+      "p99Ms": 47566,
+      "minMs": 1951,
+      "maxMs": 61660,
+      "slowCount1s": 307,
+      "slowCount5s": 114,
+      "slowCount10s": 74,
+      "errors": 0,
+      "statuses": {
+        "200": 307
+      }
+    },
+    {
+      "key": "SOAP:BuscaExamesConfigAdicionais",
+      "count": 265,
+      "avgMs": 2968.8603773584905,
+      "p50Ms": 1065,
+      "p90Ms": 7581,
+      "p95Ms": 10147,
+      "p99Ms": 15013,
+      "minMs": 497,
+      "maxMs": 21452,
+      "slowCount1s": 144,
+      "slowCount5s": 56,
+      "slowCount10s": 15,
+      "errors": 0,
+      "statuses": {
+        "200": 265
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoLista",
+      "count": 38550,
+      "avgMs": 2223.472036316472,
+      "p50Ms": 387,
+      "p90Ms": 4194,
+      "p95Ms": 7977,
+      "p99Ms": 30246,
+      "minMs": 31,
+      "maxMs": 365605,
+      "slowCount1s": 13505,
+      "slowCount5s": 3106,
+      "slowCount10s": 1568,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 38548
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostras",
+      "count": 30,
+      "avgMs": 2665.9333333333334,
+      "p50Ms": 1218,
+      "p90Ms": 5661,
+      "p95Ms": 7817,
+      "p99Ms": 15340,
+      "minMs": 171,
+      "maxMs": 15340,
+      "slowCount1s": 17,
+      "slowCount5s": 5,
+      "slowCount10s": 1,
+      "errors": 0,
+      "statuses": {
+        "200": 30
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostrasProcedimentosPendentes",
+      "count": 19,
+      "avgMs": 2582.6315789473683,
+      "p50Ms": 1503,
+      "p90Ms": 6868,
+      "p95Ms": 7252,
+      "p99Ms": 7252,
+      "minMs": 45,
+      "maxMs": 7252,
+      "slowCount1s": 10,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 19
+      }
+    },
+    {
+      "key": "SOAP:RecebeAtendimento",
+      "count": 11904,
+      "avgMs": 2300.7405913978496,
+      "p50Ms": 1123,
+      "p90Ms": 4964,
+      "p95Ms": 6670,
+      "p99Ms": 10760,
+      "minMs": 31,
+      "maxMs": 23365,
+      "slowCount1s": 11893,
+      "slowCount5s": 1167,
+      "slowCount10s": 158,
+      "errors": 0,
+      "statuses": {
+        "200": 11904
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoV3",
+      "count": 9654,
+      "avgMs": 1663.5823492852703,
+      "p50Ms": 328,
+      "p90Ms": 4142,
+      "p95Ms": 6605,
+      "p99Ms": 16769,
+      "minMs": 20,
+      "maxMs": 79584,
+      "slowCount1s": 3726,
+      "slowCount5s": 768,
+      "slowCount10s": 266,
+      "errors": 0,
+      "statuses": {
+        "200": 9654
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoListaV3",
+      "count": 5158,
+      "avgMs": 1877.0091120589375,
+      "p50Ms": 334,
+      "p90Ms": 4485,
+      "p95Ms": 6598,
+      "p99Ms": 18113,
+      "minMs": 99,
+      "maxMs": 88589,
+      "slowCount1s": 1993,
+      "slowCount5s": 432,
+      "slowCount10s": 139,
+      "errors": 0,
+      "statuses": {
+        "200": 5158
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimento",
+      "count": 33435,
+      "avgMs": 1577.5933602512337,
+      "p50Ms": 507,
+      "p90Ms": 4054,
+      "p95Ms": 6244,
+      "p99Ms": 15153,
+      "minMs": 12,
+      "maxMs": 91097,
+      "slowCount1s": 10825,
+      "slowCount5s": 2368,
+      "slowCount10s": 676,
+      "errors": 0,
+      "statuses": {
+        "0": 8,
+        "200": 33427
+      }
+    },
+    {
+      "key": "SOAP:GetInformacoesExameAdicionais",
+      "count": 212,
+      "avgMs": 1493.0754716981132,
+      "p50Ms": 364,
+      "p90Ms": 4049,
+      "p95Ms": 5746,
+      "p99Ms": 11787,
+      "minMs": 128,
+      "maxMs": 16677,
+      "slowCount1s": 72,
+      "slowCount5s": 13,
+      "slowCount10s": 4,
+      "errors": 0,
+      "statuses": {
+        "200": 212
+      }
+    },
+    {
+      "key": "SOAP:ListaProcedimentosPendentes",
+      "count": 176,
+      "avgMs": 2129.0454545454545,
+      "p50Ms": 1890,
+      "p90Ms": 4720,
+      "p95Ms": 5616,
+      "p99Ms": 8759,
+      "minMs": 277,
+      "maxMs": 9930,
+      "slowCount1s": 114,
+      "slowCount5s": 13,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 176
+      }
+    },
+    {
+      "key": "SOAP:EnviaResultadoBase64",
+      "count": 19325,
+      "avgMs": 940.7208796895213,
+      "p50Ms": 263,
+      "p90Ms": 2843,
+      "p95Ms": 4400,
+      "p99Ms": 8231,
+      "minMs": 52,
+      "maxMs": 32591,
+      "slowCount1s": 3905,
+      "slowCount5s": 765,
+      "slowCount10s": 109,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 19323
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultados",
+      "count": 32344,
+      "avgMs": 959.8873361365323,
+      "p50Ms": 196,
+      "p90Ms": 2757,
+      "p95Ms": 4294,
+      "p99Ms": 9023,
+      "minMs": 20,
+      "maxMs": 67344,
+      "slowCount1s": 7305,
+      "slowCount5s": 1198,
+      "slowCount10s": 257,
+      "errors": 0,
+      "statuses": {
+        "200": 32344
+      }
+    },
+    {
+      "key": "SOAP:BuscaPendenciasMPP",
+      "count": 42820,
+      "avgMs": 651.1518449322747,
+      "p50Ms": 119,
+      "p90Ms": 2143,
+      "p95Ms": 3409,
+      "p99Ms": 6275,
+      "minMs": 50,
+      "maxMs": 21184,
+      "slowCount1s": 7580,
+      "slowCount5s": 804,
+      "slowCount10s": 77,
+      "errors": 0,
+      "statuses": {
+        "200": 42820
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singlewsdl",
+      "count": 15,
+      "avgMs": 487.53333333333336,
+      "p50Ms": 3,
+      "p90Ms": 2584,
+      "p95Ms": 3395,
+      "p99Ms": 3395,
+      "minMs": 2,
+      "maxMs": 3395,
+      "slowCount1s": 3,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 15
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultadosV3",
+      "count": 15824,
+      "avgMs": 612.9127906976744,
+      "p50Ms": 141,
+      "p90Ms": 1835,
+      "p95Ms": 3240,
+      "p99Ms": 6177,
+      "minMs": 34,
+      "maxMs": 42165,
+      "slowCount1s": 2556,
+      "slowCount5s": 284,
+      "slowCount10s": 42,
+      "errors": 0,
+      "statuses": {
+        "200": 15824
+      }
+    },
+    {
+      "key": "GET /dbsync/wfrmErro.aspx",
+      "count": 1450,
+      "avgMs": 866.8868965517241,
+      "p50Ms": 539,
+      "p90Ms": 2170,
+      "p95Ms": 3165,
+      "p99Ms": 4794,
+      "minMs": 3,
+      "maxMs": 9447,
+      "slowCount1s": 539,
+      "slowCount5s": 12,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1450
+      }
+    },
+    {
+      "key": "SOAP:ConsultaStatusAtendimento",
+      "count": 166167,
+      "avgMs": 494.6280007462372,
+      "p50Ms": 155,
+      "p90Ms": 747,
+      "p95Ms": 2492,
+      "p99Ms": 6146,
+      "minMs": 30,
+      "maxMs": 24827,
+      "slowCount1s": 15447,
+      "slowCount5s": 2667,
+      "slowCount10s": 288,
+      "errors": 0,
+      "statuses": {
+        "0": 11,
+        "200": 166156
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl",
+      "count": 1830,
+      "avgMs": 604.5131147540984,
+      "p50Ms": 1,
+      "p90Ms": 1862,
+      "p95Ms": 2268,
+      "p99Ms": 4507,
+      "minMs": 0,
+      "maxMs": 6003,
+      "slowCount1s": 495,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 1,
+        "200": 1829
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl1",
+      "count": 1654,
+      "avgMs": 605.6529625151148,
+      "p50Ms": 1,
+      "p90Ms": 1858,
+      "p95Ms": 2256,
+      "p99Ms": 4522,
+      "minMs": 0,
+      "maxMs": 7509,
+      "slowCount1s": 451,
+      "slowCount5s": 10,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1654
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl0",
+      "count": 1684,
+      "avgMs": 626.6383610451306,
+      "p50Ms": 1,
+      "p90Ms": 1897,
+      "p95Ms": 2227,
+      "p99Ms": 4041,
+      "minMs": 0,
+      "maxMs": 8233,
+      "slowCount1s": 485,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1684
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?xsd=xsd0",
+      "count": 5501,
+      "avgMs": 502.7954917287766,
+      "p50Ms": 3,
+      "p90Ms": 1785,
+      "p95Ms": 2132,
+      "p99Ms": 4354,
+      "minMs": 2,
+      "maxMs": 7321,
+      "slowCount1s": 1247,
+      "slowCount5s": 25,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 5501
+      }
+    },
+    {
+      "key": "GET /dbsync/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 8871,
+      "avgMs": 494.59159057603426,
+      "p50Ms": 18,
+      "p90Ms": 1582,
+      "p95Ms": 2100,
+      "p99Ms": 5616,
+      "minMs": 5,
+      "maxMs": 33728,
+      "slowCount1s": 1468,
+      "slowCount5s": 110,
+      "slowCount10s": 35,
+      "errors": 0,
+      "statuses": {
+        "200": 8871
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singleWsdl",
+      "count": 1585,
+      "avgMs": 363.9305993690852,
+      "p50Ms": 3,
+      "p90Ms": 1485,
+      "p95Ms": 1898,
+      "p99Ms": 3619,
+      "minMs": 2,
+      "maxMs": 8125,
+      "slowCount1s": 242,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1585
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "count": 10681,
+      "avgMs": 292.73991199325906,
+      "p50Ms": 1,
+      "p90Ms": 1273,
+      "p95Ms": 1853,
+      "p99Ms": 3399,
+      "minMs": 0,
+      "maxMs": 7041,
+      "slowCount1s": 1356,
+      "slowCount5s": 16,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 10681
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?WSDL",
+      "count": 1,
+      "avgMs": 1121,
+      "p50Ms": 1121,
+      "p90Ms": 1121,
+      "p95Ms": 1121,
+      "p99Ms": 1121,
+      "minMs": 1121,
+      "maxMs": 1121,
+      "slowCount1s": 1,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1
+      }
+    },
+    {
+      "key": "POST /dbsync/wfrmErro.aspx",
+      "count": 1,
+      "avgMs": 504,
+      "p50Ms": 504,
+      "p90Ms": 504,
+      "p95Ms": 504,
+      "p99Ms": 504,
+      "minMs": 504,
+      "maxMs": 504,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "302": 1
+      }
+    },
+    {
+      "key": "GET /dbsync/images/apple-touch-icon.png",
+      "count": 1,
+      "avgMs": 2,
+      "p50Ms": 2,
+      "p90Ms": 2,
+      "p95Ms": 2,
+      "p99Ms": 2,
+      "minMs": 2,
+      "maxMs": 2,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1
+      }
+    }
+  ],
+  "slowEndpointsMax": [
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoLista",
+      "count": 38550,
+      "avgMs": 2223.472036316472,
+      "p50Ms": 387,
+      "p90Ms": 4194,
+      "p95Ms": 7977,
+      "p99Ms": 30246,
+      "minMs": 31,
+      "maxMs": 365605,
+      "slowCount1s": 13505,
+      "slowCount5s": 3106,
+      "slowCount10s": 1568,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 38548
+      }
+    },
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodo",
+      "count": 570,
+      "avgMs": 8497.108771929825,
+      "p50Ms": 1816,
+      "p90Ms": 22595,
+      "p95Ms": 38046,
+      "p99Ms": 99994,
+      "minMs": 55,
+      "maxMs": 203564,
+      "slowCount1s": 385,
+      "slowCount5s": 184,
+      "slowCount10s": 118,
+      "errors": 0,
+      "statuses": {
+        "200": 570
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimento",
+      "count": 33435,
+      "avgMs": 1577.5933602512337,
+      "p50Ms": 507,
+      "p90Ms": 4054,
+      "p95Ms": 6244,
+      "p99Ms": 15153,
+      "minMs": 12,
+      "maxMs": 91097,
+      "slowCount1s": 10825,
+      "slowCount5s": 2368,
+      "slowCount10s": 676,
+      "errors": 0,
+      "statuses": {
+        "0": 8,
+        "200": 33427
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoListaV3",
+      "count": 5158,
+      "avgMs": 1877.0091120589375,
+      "p50Ms": 334,
+      "p90Ms": 4485,
+      "p95Ms": 6598,
+      "p99Ms": 18113,
+      "minMs": 99,
+      "maxMs": 88589,
+      "slowCount1s": 1993,
+      "slowCount5s": 432,
+      "slowCount10s": 139,
+      "errors": 0,
+      "statuses": {
+        "200": 5158
+      }
+    },
+    {
+      "key": "SOAP:EnviaLaudoAtendimentoV3",
+      "count": 9654,
+      "avgMs": 1663.5823492852703,
+      "p50Ms": 328,
+      "p90Ms": 4142,
+      "p95Ms": 6605,
+      "p99Ms": 16769,
+      "minMs": 20,
+      "maxMs": 79584,
+      "slowCount1s": 3726,
+      "slowCount5s": 768,
+      "slowCount10s": 266,
+      "errors": 0,
+      "statuses": {
+        "200": 9654
+      }
+    },
+    {
+      "key": "SOAP:BuscaResultadosPorPeriodoV3",
+      "count": 37,
+      "avgMs": 13421.945945945947,
+      "p50Ms": 4822,
+      "p90Ms": 40984,
+      "p95Ms": 54376,
+      "p99Ms": 72419,
+      "minMs": 615,
+      "maxMs": 72419,
+      "slowCount1s": 36,
+      "slowCount5s": 17,
+      "slowCount10s": 13,
+      "errors": 0,
+      "statuses": {
+        "200": 37
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultados",
+      "count": 32344,
+      "avgMs": 959.8873361365323,
+      "p50Ms": 196,
+      "p90Ms": 2757,
+      "p95Ms": 4294,
+      "p99Ms": 9023,
+      "minMs": 20,
+      "maxMs": 67344,
+      "slowCount1s": 7305,
+      "slowCount5s": 1198,
+      "slowCount10s": 257,
+      "errors": 0,
+      "statuses": {
+        "200": 32344
+      }
+    },
+    {
+      "key": "SOAP:BuscaProcedimentos",
+      "count": 307,
+      "avgMs": 8648.85667752443,
+      "p50Ms": 3653,
+      "p90Ms": 21231,
+      "p95Ms": 32175,
+      "p99Ms": 47566,
+      "minMs": 1951,
+      "maxMs": 61660,
+      "slowCount1s": 307,
+      "slowCount5s": 114,
+      "slowCount10s": 74,
+      "errors": 0,
+      "statuses": {
+        "200": 307
+      }
+    },
+    {
+      "key": "SOAP:EnviaLoteResultadosV3",
+      "count": 15824,
+      "avgMs": 612.9127906976744,
+      "p50Ms": 141,
+      "p90Ms": 1835,
+      "p95Ms": 3240,
+      "p99Ms": 6177,
+      "minMs": 34,
+      "maxMs": 42165,
+      "slowCount1s": 2556,
+      "slowCount5s": 284,
+      "slowCount10s": 42,
+      "errors": 0,
+      "statuses": {
+        "200": 15824
+      }
+    },
+    {
+      "key": "GET /dbsync/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 8871,
+      "avgMs": 494.59159057603426,
+      "p50Ms": 18,
+      "p90Ms": 1582,
+      "p95Ms": 2100,
+      "p99Ms": 5616,
+      "minMs": 5,
+      "maxMs": 33728,
+      "slowCount1s": 1468,
+      "slowCount5s": 110,
+      "slowCount10s": 35,
+      "errors": 0,
+      "statuses": {
+        "200": 8871
+      }
+    },
+    {
+      "key": "SOAP:EnviaResultadoBase64",
+      "count": 19325,
+      "avgMs": 940.7208796895213,
+      "p50Ms": 263,
+      "p90Ms": 2843,
+      "p95Ms": 4400,
+      "p99Ms": 8231,
+      "minMs": 52,
+      "maxMs": 32591,
+      "slowCount1s": 3905,
+      "slowCount5s": 765,
+      "slowCount10s": 109,
+      "errors": 0,
+      "statuses": {
+        "0": 2,
+        "200": 19323
+      }
+    },
+    {
+      "key": "SOAP:ConsultaStatusAtendimento",
+      "count": 166167,
+      "avgMs": 494.6280007462372,
+      "p50Ms": 155,
+      "p90Ms": 747,
+      "p95Ms": 2492,
+      "p99Ms": 6146,
+      "minMs": 30,
+      "maxMs": 24827,
+      "slowCount1s": 15447,
+      "slowCount5s": 2667,
+      "slowCount10s": 288,
+      "errors": 0,
+      "statuses": {
+        "0": 11,
+        "200": 166156
+      }
+    },
+    {
+      "key": "SOAP:RecebeAtendimento",
+      "count": 11904,
+      "avgMs": 2300.7405913978496,
+      "p50Ms": 1123,
+      "p90Ms": 4964,
+      "p95Ms": 6670,
+      "p99Ms": 10760,
+      "minMs": 31,
+      "maxMs": 23365,
+      "slowCount1s": 11893,
+      "slowCount5s": 1167,
+      "slowCount10s": 158,
+      "errors": 0,
+      "statuses": {
+        "200": 11904
+      }
+    },
+    {
+      "key": "SOAP:BuscaExamesConfigAdicionais",
+      "count": 265,
+      "avgMs": 2968.8603773584905,
+      "p50Ms": 1065,
+      "p90Ms": 7581,
+      "p95Ms": 10147,
+      "p99Ms": 15013,
+      "minMs": 497,
+      "maxMs": 21452,
+      "slowCount1s": 144,
+      "slowCount5s": 56,
+      "slowCount10s": 15,
+      "errors": 0,
+      "statuses": {
+        "200": 265
+      }
+    },
+    {
+      "key": "SOAP:BuscaPendenciasMPP",
+      "count": 42820,
+      "avgMs": 651.1518449322747,
+      "p50Ms": 119,
+      "p90Ms": 2143,
+      "p95Ms": 3409,
+      "p99Ms": 6275,
+      "minMs": 50,
+      "maxMs": 21184,
+      "slowCount1s": 7580,
+      "slowCount5s": 804,
+      "slowCount10s": 77,
+      "errors": 0,
+      "statuses": {
+        "200": 42820
+      }
+    },
+    {
+      "key": "SOAP:GetInformacoesExameAdicionais",
+      "count": 212,
+      "avgMs": 1493.0754716981132,
+      "p50Ms": 364,
+      "p90Ms": 4049,
+      "p95Ms": 5746,
+      "p99Ms": 11787,
+      "minMs": 128,
+      "maxMs": 16677,
+      "slowCount1s": 72,
+      "slowCount5s": 13,
+      "slowCount10s": 4,
+      "errors": 0,
+      "statuses": {
+        "200": 212
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostras",
+      "count": 30,
+      "avgMs": 2665.9333333333334,
+      "p50Ms": 1218,
+      "p90Ms": 5661,
+      "p95Ms": 7817,
+      "p99Ms": 15340,
+      "minMs": 171,
+      "maxMs": 15340,
+      "slowCount1s": 17,
+      "slowCount5s": 5,
+      "slowCount10s": 1,
+      "errors": 0,
+      "statuses": {
+        "200": 30
+      }
+    },
+    {
+      "key": "SOAP:ListaProcedimentosPendentes",
+      "count": 176,
+      "avgMs": 2129.0454545454545,
+      "p50Ms": 1890,
+      "p90Ms": 4720,
+      "p95Ms": 5616,
+      "p99Ms": 8759,
+      "minMs": 277,
+      "maxMs": 9930,
+      "slowCount1s": 114,
+      "slowCount5s": 13,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 176
+      }
+    },
+    {
+      "key": "GET /dbsync/wfrmErro.aspx",
+      "count": 1450,
+      "avgMs": 866.8868965517241,
+      "p50Ms": 539,
+      "p90Ms": 2170,
+      "p95Ms": 3165,
+      "p99Ms": 4794,
+      "minMs": 3,
+      "maxMs": 9447,
+      "slowCount1s": 539,
+      "slowCount5s": 12,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1450
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl0",
+      "count": 1684,
+      "avgMs": 626.6383610451306,
+      "p50Ms": 1,
+      "p90Ms": 1897,
+      "p95Ms": 2227,
+      "p99Ms": 4041,
+      "minMs": 0,
+      "maxMs": 8233,
+      "slowCount1s": 485,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1684
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singleWsdl",
+      "count": 1585,
+      "avgMs": 363.9305993690852,
+      "p50Ms": 3,
+      "p90Ms": 1485,
+      "p95Ms": 1898,
+      "p99Ms": 3619,
+      "minMs": 2,
+      "maxMs": 8125,
+      "slowCount1s": 242,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1585
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl=wsdl1",
+      "count": 1654,
+      "avgMs": 605.6529625151148,
+      "p50Ms": 1,
+      "p90Ms": 1858,
+      "p95Ms": 2256,
+      "p99Ms": 4522,
+      "minMs": 0,
+      "maxMs": 7509,
+      "slowCount1s": 451,
+      "slowCount5s": 10,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1654
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?xsd=xsd0",
+      "count": 5501,
+      "avgMs": 502.7954917287766,
+      "p50Ms": 3,
+      "p90Ms": 1785,
+      "p95Ms": 2132,
+      "p99Ms": 4354,
+      "minMs": 2,
+      "maxMs": 7321,
+      "slowCount1s": 1247,
+      "slowCount5s": 25,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 5501
+      }
+    },
+    {
+      "key": "SOAP:EnviaAmostrasProcedimentosPendentes",
+      "count": 19,
+      "avgMs": 2582.6315789473683,
+      "p50Ms": 1503,
+      "p90Ms": 6868,
+      "p95Ms": 7252,
+      "p99Ms": 7252,
+      "minMs": 45,
+      "maxMs": 7252,
+      "slowCount1s": 10,
+      "slowCount5s": 4,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 19
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "count": 10681,
+      "avgMs": 292.73991199325906,
+      "p50Ms": 1,
+      "p90Ms": 1273,
+      "p95Ms": 1853,
+      "p99Ms": 3399,
+      "minMs": 0,
+      "maxMs": 7041,
+      "slowCount1s": 1356,
+      "slowCount5s": 16,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 10681
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?wsdl",
+      "count": 1830,
+      "avgMs": 604.5131147540984,
+      "p50Ms": 1,
+      "p90Ms": 1862,
+      "p95Ms": 2268,
+      "p99Ms": 4507,
+      "minMs": 0,
+      "maxMs": 6003,
+      "slowCount1s": 495,
+      "slowCount5s": 9,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "0": 1,
+        "200": 1829
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?singlewsdl",
+      "count": 15,
+      "avgMs": 487.53333333333336,
+      "p50Ms": 3,
+      "p90Ms": 2584,
+      "p95Ms": 3395,
+      "p99Ms": 3395,
+      "minMs": 2,
+      "maxMs": 3395,
+      "slowCount1s": 3,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 15
+      }
+    },
+    {
+      "key": "GET /dbsync/wsrvProtocoloDBSync.dbsync.svc?WSDL",
+      "count": 1,
+      "avgMs": 1121,
+      "p50Ms": 1121,
+      "p90Ms": 1121,
+      "p95Ms": 1121,
+      "p99Ms": 1121,
+      "minMs": 1121,
+      "maxMs": 1121,
+      "slowCount1s": 1,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 1
+      }
+    },
+    {
+      "key": "POST /dbsync/wfrmErro.aspx",
+      "count": 1,
+      "avgMs": 504,
+      "p50Ms": 504,
+      "p90Ms": 504,
+      "p95Ms": 504,
+      "p99Ms": 504,
+      "minMs": 504,
+      "maxMs": 504,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 0,
+      "statuses": {
+        "302": 1
+      }
+    },
+    {
+      "key": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 9036,
+      "avgMs": 0.565294378043382,
+      "p50Ms": 0,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 378,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 9036,
+      "statuses": {
+        "404": 9036
+      }
+    }
+  ],
+  "endpointsWithErrors": [
+    {
+      "key": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "count": 9036,
+      "avgMs": 0.565294378043382,
+      "p50Ms": 0,
+      "p90Ms": 1,
+      "p95Ms": 1,
+      "p99Ms": 1,
+      "minMs": 0,
+      "maxMs": 378,
+      "slowCount1s": 0,
+      "slowCount5s": 0,
+      "slowCount10s": 0,
+      "errors": 9036,
+      "statuses": {
+        "404": 9036
+      }
+    }
+  ],
+  "topSeconds": [
+    {
+      "second": "2026-05-28 04:16:54",
+      "count": 113
+    },
+    {
+      "second": "2026-05-28 02:24:46",
+      "count": 103
+    },
+    {
+      "second": "2026-05-28 05:17:18",
+      "count": 102
+    },
+    {
+      "second": "2026-05-28 06:16:46",
+      "count": 101
+    },
+    {
+      "second": "2026-05-28 05:17:15",
+      "count": 99
+    },
+    {
+      "second": "2026-05-28 03:17:44",
+      "count": 98
+    },
+    {
+      "second": "2026-05-28 05:17:19",
+      "count": 98
+    },
+    {
+      "second": "2026-05-28 02:27:37",
+      "count": 97
+    },
+    {
+      "second": "2026-05-28 03:17:45",
+      "count": 95
+    },
+    {
+      "second": "2026-05-28 05:17:16",
+      "count": 95
+    },
+    {
+      "second": "2026-05-28 05:17:17",
+      "count": 94
+    },
+    {
+      "second": "2026-05-28 03:17:40",
+      "count": 93
+    },
+    {
+      "second": "2026-05-28 04:16:53",
+      "count": 90
+    },
+    {
+      "second": "2026-05-28 04:16:48",
+      "count": 89
+    },
+    {
+      "second": "2026-05-28 04:16:55",
+      "count": 89
+    },
+    {
+      "second": "2026-05-28 04:16:41",
+      "count": 88
+    },
+    {
+      "second": "2026-05-28 03:17:42",
+      "count": 87
+    },
+    {
+      "second": "2026-05-28 06:16:47",
+      "count": 87
+    },
+    {
+      "second": "2026-05-28 02:20:49",
+      "count": 86
+    },
+    {
+      "second": "2026-05-28 04:16:46",
+      "count": 86
+    }
+  ],
+  "topMinutes": [
+    {
+      "minute": "2026-05-28 03:02",
+      "count": 2470
+    },
+    {
+      "minute": "2026-05-28 03:17",
+      "count": 2450
+    },
+    {
+      "minute": "2026-05-28 04:16",
+      "count": 2300
+    },
+    {
+      "minute": "2026-05-28 03:07",
+      "count": 2244
+    },
+    {
+      "minute": "2026-05-28 03:04",
+      "count": 2227
+    },
+    {
+      "minute": "2026-05-28 03:06",
+      "count": 2199
+    },
+    {
+      "minute": "2026-05-28 03:05",
+      "count": 2091
+    },
+    {
+      "minute": "2026-05-28 03:03",
+      "count": 2079
+    },
+    {
+      "minute": "2026-05-28 03:08",
+      "count": 1983
+    },
+    {
+      "minute": "2026-05-28 05:17",
+      "count": 1925
+    },
+    {
+      "minute": "2026-05-28 03:19",
+      "count": 1902
+    },
+    {
+      "minute": "2026-05-28 03:18",
+      "count": 1807
+    },
+    {
+      "minute": "2026-05-28 03:10",
+      "count": 1761
+    },
+    {
+      "minute": "2026-05-28 04:47",
+      "count": 1750
+    },
+    {
+      "minute": "2026-05-28 04:14",
+      "count": 1725
+    },
+    {
+      "minute": "2026-05-28 03:16",
+      "count": 1721
+    },
+    {
+      "minute": "2026-05-28 03:14",
+      "count": 1717
+    },
+    {
+      "minute": "2026-05-28 04:50",
+      "count": 1686
+    },
+    {
+      "minute": "2026-05-28 03:15",
+      "count": 1673
+    },
+    {
+      "minute": "2026-05-28 04:19",
+      "count": 1655
+    }
+  ],
+  "hourlyVolume": [
+    {
+      "hour": "2026-05-27 23",
+      "count": 72
+    },
+    {
+      "hour": "2026-05-28 00",
+      "count": 52962
+    },
+    {
+      "hour": "2026-05-28 01",
+      "count": 54561
+    },
+    {
+      "hour": "2026-05-28 02",
+      "count": 50465
+    },
+    {
+      "hour": "2026-05-28 03",
+      "count": 87670
+    },
+    {
+      "hour": "2026-05-28 04",
+      "count": 81759
+    },
+    {
+      "hour": "2026-05-28 05",
+      "count": 72567
+    },
+    {
+      "hour": "2026-05-28 06",
+      "count": 28086
+    }
+  ],
+  "slowRows": [
+    {
+      "ts": "2026-05-28T01:40:57Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 64,
+      "timeTaken": 365605,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:36:44Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 268465,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:41:22Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 253183,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:38:36Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 250748,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:27:56Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 211929,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:36:09Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.4.19",
+      "uaFamily": "PHP-SOAP/7.4.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 211289,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:41:28Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 208035,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:04:43Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 203564,
+      "soapAction": "http://diagnosticosdobrasil.com.br/BuscaResultadosPorPeriodo",
+      "endpoint": "SOAP:BuscaResultadosPorPeriodo"
+    },
+    {
+      "ts": "2026-05-28T01:39:52Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "CodeGear+SOAP+1.3",
+      "uaFamily": "CodeGear+SOAP+1.3",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 202729,
+      "soapAction": "http://diagnosticosdobrasil.com.br/BuscaResultadosPorPeriodo",
+      "endpoint": "SOAP:BuscaResultadosPorPeriodo"
+    },
+    {
+      "ts": "2026-05-28T00:35:43Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 200965,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:38:55Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.8.0_191)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 197533,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:38:32Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 196948,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:24:37Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 193894,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:35:35Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.8.0_191)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 184253,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:28:03Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 181412,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:23:47Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 179485,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:26:44Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 178719,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:29:41Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 177369,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:39:24Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 173125,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:35:00Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 170873,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:31:28Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 168330,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:37:05Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 165427,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:36:33Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/3.0+(compatible;+Indy+Library)",
+      "uaFamily": "Mozilla/legacy",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 164089,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:24:57Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 161056,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:59:36Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 160319,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:32:31Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 159504,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:23:46Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 158943,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:35:43Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/3.0+(compatible;+Indy+Library)",
+      "uaFamily": "Mozilla/legacy",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 153771,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:59:31Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 149854,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:35:32Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 147025,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:59:01Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 136723,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:18:54Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.2.19",
+      "uaFamily": "PHP-SOAP/7.2.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 134382,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:13:57Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "CodeGear+SOAP+1.3",
+      "uaFamily": "CodeGear+SOAP+1.3",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 132081,
+      "soapAction": "http://diagnosticosdobrasil.com.br/BuscaResultadosPorPeriodo",
+      "endpoint": "SOAP:BuscaResultadosPorPeriodo"
+    },
+    {
+      "ts": "2026-05-28T01:20:59Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 129293,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:30:08Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/3.0+(compatible;+Indy+Library)",
+      "uaFamily": "Mozilla/legacy",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 128711,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:41:20Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "wsdl",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Mozilla/4.0+(compatible;+Win32;+WinHttp.WinHttpRequest.5)",
+      "uaFamily": "WinHTTP",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 120433,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:29:16Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 119814,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T02:08:34Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "PHP-SOAP/7.4.19",
+      "uaFamily": "PHP-SOAP/7.4.19",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 119194,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T00:36:55Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.7.0_79)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 117726,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    },
+    {
+      "ts": "2026-05-28T01:29:27Z",
+      "method": "POST",
+      "uri": "/dbsync/wsrvProtocoloDBSync.dbsync.svc",
+      "query": "-",
+      "clientIp": "10.225.14.8",
+      "userAgent": "Apache-HttpClient/4.5.9+(Java/1.8.0_191)",
+      "uaFamily": "Apache HttpClient",
+      "status": 200,
+      "substatus": 0,
+      "win32Status": 0,
+      "timeTaken": 116659,
+      "soapAction": "http://diagnosticosdobrasil.com.br/EnviaLaudoAtendimentoLista",
+      "endpoint": "SOAP:EnviaLaudoAtendimentoLista"
+    }
+  ],
+  "errorSample": [
+    {
+      "ts": "2026-05-28T06:23:29Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:30Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:34Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:35Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:45Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:45Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:49Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:49Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:55Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:23:55Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:00Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:00Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:04Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:05Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:09Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:09Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:15Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:15Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:19Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:20Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:24Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:25Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:30Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:30Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:34Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:35Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:44Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:44Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:50Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:50Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:54Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:24:55Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:00Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:00Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:05Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:05Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:09Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:10Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:14Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:15Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:20Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:20Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:25Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:25Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:29Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:30Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:34Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:34Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:40Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:44Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:44Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:50Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:50Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:54Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:55Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:59Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:25:59Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:04Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:04Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:10Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:10Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:15Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:15Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:19Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:20Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:24Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:25Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:29Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:29Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:35Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:35Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:39Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:40Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:44Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.6",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 1,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    },
+    {
+      "ts": "2026-05-28T06:26:45Z",
+      "method": "GET",
+      "uri": "/worklab/drvRastreabilidadePedido/valida/v1.0/check/true",
+      "query": "-",
+      "clientIp": "10.225.14.7",
+      "userAgent": "",
+      "uaFamily": "sem user-agent",
+      "status": 404,
+      "substatus": 0,
+      "win32Status": 2,
+      "timeTaken": 0,
+      "soapAction": "",
+      "endpoint": "GET /worklab/drvRastreabilidadePedido/valida/v1.0/check/true"
+    }
+  ]
+}

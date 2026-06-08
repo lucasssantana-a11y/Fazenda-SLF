@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Fazenda SLF">
+  <rect width="512" height="512" rx="96" fill="#255f48"/>
+  <path d="M80 318c42-84 94-126 156-126 74 0 122 58 196 54-34 86-88 132-164 132-75 0-126-44-188-60Z" fill="#e3f0e9"/>
+  <path d="M152 298c35-42 69-63 104-63 42 0 75 27 112 26-29 45-64 69-106 69-40 0-74-20-110-32Z" fill="#255f48"/>
+  <circle cx="181" cy="214" r="28" fill="#e3f0e9"/>
+  <path d="M160 202c-17-23-33-39-48-48 31-4 55 4 73 24l-25 24Zm43-9c10-28 25-49 46-62 7 34 1 61-17 82l-29-20Z" fill="#e3f0e9"/>
+  <path d="M129 393h254" stroke="#e3f0e9" stroke-width="26" stroke-linecap="round"/>
+</svg>
