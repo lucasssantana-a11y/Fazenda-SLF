@@ -375,20 +375,23 @@ function lotWasActiveForExpense(lot, expense) {
 }
 
 function allocatedExpenseForLot(lot, expense) {
-  if (!lotWasActiveForExpense(lot, expense)) return 0;
   const amount = Number(expense.amount || 0);
   const ids = expenseLotIds(expense);
+  if (expense.allocationMode === "specific_lots" || expense.allocationMode === "specific_lot") {
+    if (!ids.includes(lot.id)) return 0;
+    const selectedHeads = db.lots
+      .filter((item) => ids.includes(item.id))
+      .reduce((acc, item) => acc + Number(item.quantity || 0), 0);
+    return selectedHeads ? amount * (Number(lot.quantity || 0) / selectedHeads) : 0;
+  }
+  if (!lotWasActiveForExpense(lot, expense)) return 0;
   if (expense.allocationMode === "all_lots_by_headcount" || (!ids.length && !expense.lotId)) {
     const totalHeads = (db.lots || [])
       .filter((item) => lotWasActiveForExpense(item, expense))
       .reduce((sum, item) => sum + Number(item.quantity || 0), 0);
     return totalHeads ? amount * (Number(lot.quantity || 0) / totalHeads) : 0;
   }
-  if (!ids.includes(lot.id)) return 0;
-  const selectedHeads = db.lots
-    .filter((item) => ids.includes(item.id) && lotWasActiveForExpense(item, expense))
-    .reduce((acc, item) => acc + Number(item.quantity || 0), 0);
-  return selectedHeads ? amount * (Number(lot.quantity || 0) / selectedHeads) : 0;
+  return 0;
 }
 
 function allocatedExpensesForLot(lot) {
@@ -399,13 +402,16 @@ function stockArrobasForLot(lot) {
   return Number(lot.quantity || 0) * Number(lot.currentArrobas || 0);
 }
 
+function liveArrobasFromWeight(weightKg) {
+  return Number(weightKg || 0) / 30;
+}
+
 function growthProjectionSeries(lot, gmdKgDay, horizonDays = 180) {
   const points = [];
-  const yieldFactor = Number(db.settings?.carcassYield || 0.55);
   const step = 15;
   const startArrobas = Number(lot.currentArrobas || lot.purchaseArrobas || 0);
   for (let day = 0; day <= horizonDays; day += step) {
-    const producedArrobas = (gmdKgDay * day * yieldFactor) / 15;
+    const producedArrobas = liveArrobasFromWeight(gmdKgDay * day);
     points.push({ day, arrobas: startArrobas + producedArrobas });
   }
   return points;
@@ -1054,7 +1060,7 @@ function renderHerd() {
     weighing.date || "",
     escapeHtml(weighing.tagSnapshot || db.animals.find((animal) => animal.id === weighing.animalId)?.tag || weighing.animalId || ""),
     `${number.format(Number(weighing.weightKg || 0))} kg`,
-    `${number.format(Number(weighing.arrobas || 0))}@`,
+    `${number.format(liveArrobasFromWeight(weighing.weightKg))}@`,
     escapeHtml(weighing.source || ""),
     weighing.photoDataUrl ? `<button class="mini-button" type="button" data-action="viewWeighingPhoto" data-id="${weighing.id}">Foto</button>` : "",
     actionButtons("animalWeighings", weighing.id)
@@ -1064,8 +1070,8 @@ function renderHerd() {
     escapeHtml(db.lots.find((lot) => lot.id === weighing.lotId)?.name || weighing.lotId || ""),
     number.format(Number(weighing.quantityEvaluated || 0)),
     `${number.format(Number(weighing.averageWeightKg || 0))} kg`,
-    `${number.format(Number(weighing.averageArrobas || 0))}@`,
-    `${number.format(Number(weighing.totalArrobas || 0))}@`,
+    `${number.format(liveArrobasFromWeight(weighing.averageWeightKg))}@`,
+    `${number.format(liveArrobasFromWeight(weighing.averageWeightKg) * Number(weighing.quantityEvaluated || 0))}@`,
     escapeHtml(weighing.source || ""),
     weighing.photoDataUrl ? `<button class="mini-button" type="button" data-action="viewLotWeighingPhoto" data-id="${weighing.id}">Foto</button>` : "",
     actionButtons("lotWeighings", weighing.id)
@@ -1073,8 +1079,8 @@ function renderHerd() {
   document.querySelector("#herdTables").innerHTML = [
     table("Lotes ativos", ["ID", "Lote", "Qtd.", "Entrada", "@ aquisição", "@ atual", "Compra/cab", "Categoria", "Ações"], lotRows),
     table("Animais individuais", ["ID", "Animal", "Lote", "@ atual", "Entrada", "Ações"], animalRows),
-    table("Pesagens individuais por brinco", ["Data", "Brinco", "Peso", "@", "Origem", "Foto", "Ações"], weighingRows),
-    table("Pesagens por lote", ["Data", "Lote", "Qtd.", "Peso médio", "@ média", "@ total", "Origem", "Foto", "Ações"], lotWeighingRows)
+    table("Pesagens individuais por brinco", ["Data", "Brinco", "Peso", "@ viva", "Origem", "Foto", "Ações"], weighingRows),
+    table("Pesagens por lote", ["Data", "Lote", "Qtd.", "Peso médio", "@ média viva", "@ total viva", "Origem", "Foto", "Ações"], lotWeighingRows)
   ].join("");
 }
 

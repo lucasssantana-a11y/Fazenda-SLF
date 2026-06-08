@@ -23252,6 +23252,13 @@
       "userId": "user-lucas",
       "createdAt": "2026-06-08T15:41:45.576Z",
       "expiresAt": "2026-06-09T03:41:45.576Z"
+    },
+    {
+      "id": "session_mq5hxxnv_vqw8rl",
+      "token": "2eb7d3d892b0408953bd7b7d70b1f518d810c0d74bccbba49be0f153feb8e2ec",
+      "userId": "user-lucas",
+      "createdAt": "2026-06-08T17:40:18.475Z",
+      "expiresAt": "2026-06-09T05:40:18.468Z"
     }
   ],
   "authCodes": [

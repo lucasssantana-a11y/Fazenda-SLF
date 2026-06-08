@@ -248,6 +248,32 @@ async function loadDb() {
       changed = true;
     }
   }
+  const lotsToSyncFromLiveWeight = new Set();
+  for (const weighing of db.animalWeighings || []) {
+    if (Number(weighing.weightKg || 0) > 0) {
+      const liveArrobas = arrobaFromPv(weighing.weightKg, db);
+      if (Math.abs(Number(weighing.arrobas || 0) - liveArrobas) > 0.001) {
+        weighing.arrobas = liveArrobas;
+        changed = true;
+        const animal = (db.animals || []).find((item) => item.id === weighing.animalId);
+        if (animal?.lotId) lotsToSyncFromLiveWeight.add(animal.lotId);
+      }
+    }
+  }
+  for (const weighing of db.lotWeighings || []) {
+    if (Number(weighing.averageWeightKg || 0) > 0) {
+      const liveAverageArrobas = arrobaFromPv(weighing.averageWeightKg, db);
+      const liveTotalArrobas = liveAverageArrobas * Number(weighing.quantityEvaluated || 0);
+      if (Math.abs(Number(weighing.averageArrobas || 0) - liveAverageArrobas) > 0.001 || Math.abs(Number(weighing.totalArrobas || 0) - liveTotalArrobas) > 0.001) {
+        weighing.averageArrobas = liveAverageArrobas;
+        weighing.totalArrobas = liveTotalArrobas;
+        weighing.totalWeightKg = Number(weighing.averageWeightKg || 0) * Number(weighing.quantityEvaluated || 0);
+        changed = true;
+        if (weighing.lotId) lotsToSyncFromLiveWeight.add(weighing.lotId);
+      }
+    }
+  }
+  for (const lotId of lotsToSyncFromLiveWeight) syncLotFromWeighings(db, lotId);
   for (const category of defaultDb.expenseCategories || []) {
     if (!(db.expenseCategories || []).some((item) => item.id === category.id)) {
       db.expenseCategories.push(category);
@@ -367,11 +393,11 @@ async function body(req) {
 }
 
 function pvFromArroba(arrobas, db) {
-  return (Number(arrobas) * db.settings.arrobaKg) / db.settings.carcassYield;
+  return Number(arrobas || 0) * 30;
 }
 
 function arrobaFromPv(weightKg, db) {
-  return Number(weightKg || 0) ? (Number(weightKg) * db.settings.carcassYield) / db.settings.arrobaKg : 0;
+  return Number(weightKg || 0) ? Number(weightKg || 0) / 30 : 0;
 }
 
 function clamp(value, min, max) {
@@ -541,8 +567,8 @@ function lotContextForVision(db, lotId) {
     animals,
     recentLotWeighings,
     conversion: {
-      carcassYield: Number(db.settings.carcassYield || 0.55),
-      arrobaKg: Number(db.settings.arrobaKg || 15)
+      basis: "live_weight",
+      liveArrobaKg: 30
     }
   };
 }
@@ -579,8 +605,8 @@ function animalContextForVision(db, animalId) {
     },
     recentWeighings: weighings,
     conversion: {
-      carcassYield: Number(db.settings.carcassYield || 0.55),
-      arrobaKg: Number(db.settings.arrobaKg || 15)
+      basis: "live_weight",
+      liveArrobaKg: 30
     }
   };
 }
@@ -647,7 +673,7 @@ async function callOpenAiVisionJson(prompt, visualItems) {
 
 function referenceWeightKgForContext(context, db, mode) {
   const conversion = context?.conversion || db.settings;
-  const pv = (arrobas) => (Number(arrobas || 0) * Number(conversion.arrobaKg || 15)) / Number(conversion.carcassYield || 0.55);
+  const pv = (arrobas) => Number(arrobas || 0) * Number(conversion.liveArrobaKg || 30);
   if (mode === "animal") {
     if (Number(context.animal?.currentWeightKg || 0) > 0) return Number(context.animal.currentWeightKg);
     if (Number(context.animal?.currentArrobas || 0) > 0) return pv(context.animal.currentArrobas);
@@ -694,7 +720,7 @@ async function estimateWeightFromPhoto({ imageDataUrl, imageDataUrls, animalId, 
     "Quando houver múltiplas evidências, priorize consistência entre ângulos laterais, traseiros e frontais, porte, profundidade corporal, escore corporal e proporção com objetos/animais próximos.",
     "A estimativa final deve ser visual. Use o contexto operacional somente como calibração secundária; não reduza nem aumente a estimativa apenas para coincidir com peso cadastrado, peso anterior ou expectativa do lote.",
     "Se a evidência visual indicar peso muito diferente do cadastro, mantenha a estimativa visual e explique a divergência em warnings.",
-    "Atenção: arroba não é peso vivo. Estime sempre peso vivo em kg; o sistema converterá para arrobas depois.",
+    "Estime sempre peso vivo em kg; o sistema converterá para arroba viva usando 1@ = 30 kg.",
     "Retorne apenas JSON válido, sem markdown, com os campos:",
     '{"estimatedWeightKg": number, "confidence": "baixa|media|alta", "minWeightKg": number, "maxWeightKg": number, "reasoning": string, "warnings": string[]}',
     "Se as evidências não permitirem avaliar o animal, use confidence baixa e explique em warnings.",
@@ -751,7 +777,7 @@ async function estimateLotWeightFromPhoto({ imageDataUrl, imageDataUrls, lotId, 
     "Não tente identificar brincos individualmente neste modo; este modo é uma estimativa média coletiva.",
     "A estimativa final deve ser visual. Use o histórico do lote apenas como calibração secundária; não puxe o resultado para o peso atual cadastrado se as evidências mostrarem animais maiores ou menores.",
     "Se houver animais de tamanhos distintos no vídeo, estime a média ponderada dos animais visíveis e explique a dispersão.",
-    "Atenção: arroba não é peso vivo. Estime sempre peso vivo médio em kg; o sistema converterá para arrobas depois.",
+    "Estime sempre peso vivo médio em kg; o sistema converterá para arroba viva usando 1@ = 30 kg.",
     "Retorne apenas JSON válido, sem markdown, com os campos:",
     '{"averageWeightKg": number, "confidence": "baixa|media|alta", "minAverageWeightKg": number, "maxAverageWeightKg": number, "visibleAnimals": number, "reasoning": string, "warnings": string[]}',
     "Se as evidências não permitirem avaliação confiável, use confidence baixa e explique em warnings.",
@@ -799,13 +825,13 @@ function allocatedExpenseForLot(db, expense, lot) {
     if (!expense?.date || !item.entryDate) return true;
     return String(item.entryDate) <= String(expense.date);
   };
-  if (!lotWasActiveForExpense(lot)) return 0;
   if ((expense.allocationMode === "specific_lot" || expense.allocationMode === "specific_lots") && selectedLotIds.includes(lot.id)) {
     const selectedHeads = db.lots
-      .filter((item) => selectedLotIds.includes(item.id) && lotWasActiveForExpense(item))
+      .filter((item) => selectedLotIds.includes(item.id))
       .reduce((sum, item) => sum + Number(item.quantity || 0), 0);
     return selectedHeads ? amount * (Number(lot.quantity || 0) / selectedHeads) : 0;
   }
+  if (!lotWasActiveForExpense(lot)) return 0;
   if (expense.allocationMode === "all_lots_by_headcount" || (!selectedLotIds.length && expense.allocationMode !== "specific_lots" && expense.allocationMode !== "specific_lot")) {
     const totalHeads = db.lots
       .filter((item) => lotWasActiveForExpense(item))
@@ -1293,7 +1319,7 @@ function simulate(input, db) {
   const combinedRisk = risk.level === "alto" || timeRisk === "alto" ? "alto" : risk.level === "medio" || timeRisk === "medio" ? "medio" : "baixo";
   const comparisonDays = Math.min(days || 60, 60);
   const comparisonTargetPvKg = currentPvKg + gmdKgDay * comparisonDays;
-  const comparisonTargetArrobas = comparisonTargetPvKg * db.settings.carcassYield / db.settings.arrobaKg;
+  const comparisonTargetArrobas = arrobaFromPv(comparisonTargetPvKg, db);
   const comparisonAvgPvKg = (currentPvKg + comparisonTargetPvKg) / 2;
   const comparisonFortisKgDay = comparisonAvgPvKg * fortisPercentPv;
   const comparisonComigoKgDay = comparisonAvgPvKg * comigoPercentPv;
