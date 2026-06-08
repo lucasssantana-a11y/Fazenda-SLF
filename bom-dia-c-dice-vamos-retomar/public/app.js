@@ -1394,6 +1394,9 @@ function coerceEditPayload(entity, payload) {
   for (const [key, value] of Object.entries(payload)) {
     if (numericFields.has(key)) payload[key] = value === "" ? null : parseNumericInput(value);
   }
+  if (entity === "lots" && Number(payload.purchaseArrobas || 0) > 1 && Number(payload.currentArrobas || 0) > 0 && Number(payload.currentArrobas || 0) < 1) {
+    throw new Error("@ atual menor que 1@ parece erro de conversão. Informe a arroba viva atual do lote, por exemplo 7 ou 9.");
+  }
   if (payload.defaultPercentPv !== undefined && payload.defaultPercentPv !== null) payload.defaultPercentPv = payload.defaultPercentPv / 100;
   if (entity === "expenses") {
     payload.lotIds = Array.isArray(payload.lotIds) ? payload.lotIds.filter(Boolean) : payload.lotIds ? [payload.lotIds] : [];
@@ -1663,10 +1666,14 @@ document.querySelector("#closeReceiptBtn").addEventListener("click", () => {
 document.querySelector("#editForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!editContext) return;
-  const payload = coerceEditPayload(editContext.entity, formData(event.currentTarget));
-  await updateEntity(editContext.entity, editContext.id, payload);
-  document.querySelector("#editDialog").close();
-  editContext = null;
+  try {
+    const payload = coerceEditPayload(editContext.entity, formData(event.currentTarget));
+    await updateEntity(editContext.entity, editContext.id, payload);
+    document.querySelector("#editDialog").close();
+    editContext = null;
+  } catch (error) {
+    window.alert(error.message);
+  }
 });
 
 document.querySelector("#simulationForm").addEventListener("submit", async (event) => {

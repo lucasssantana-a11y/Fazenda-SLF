@@ -6,15 +6,19 @@
     <meta name="theme-color" content="#255f48" />
     <title>Simulador Pecuário</title>
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/logo-slf.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/logo-slf.png" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <div id="authGate" class="auth-gate" hidden>
       <form id="loginForm" class="auth-card">
         <div class="brand">
-          <strong>Fazenda SLF - Corinto | MG</strong>
-          <span>Sistema pecuário</span>
+          <img class="brand-logo auth-logo" src="/logo-slf.png" alt="SLF Agropecuária" />
+          <div class="brand-text">
+            <strong>SLF Agropecuária</strong>
+            <span>Sistema pecuário</span>
+          </div>
         </div>
         <label>E-mail<input name="email" type="email" autocomplete="username" required value="lucas@fazendaslf.com" /></label>
         <label>Senha<input name="password" type="password" autocomplete="current-password" required /></label>
@@ -25,8 +29,11 @@
     <div id="appShell" class="app-shell" hidden>
       <aside class="sidebar">
         <div class="brand">
-          <strong>Fazenda SLF - Corinto | MG</strong>
-          <span>Decisão de recria e engorda</span>
+          <img class="brand-logo" src="/logo-slf.png" alt="SLF Agropecuária" />
+          <div class="brand-text">
+            <strong>SLF Agropecuária</strong>
+            <span>Decisão de recria e engorda</span>
+          </div>
         </div>
         <nav class="nav-list" aria-label="Navegação principal">
           <button class="nav-item active" type="button" data-view="overview">Visão geral</button>

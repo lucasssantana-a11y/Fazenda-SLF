@@ -228,6 +228,10 @@ async function loadDb() {
       lot.purchaseArrobas = Number(lot.currentArrobas || 0);
       changed = true;
     }
+    const previousCurrentArrobas = Number(lot.currentArrobas || 0);
+    const previousNotes = lot.notes || "";
+    normalizeLotRecord(lot);
+    if (Number(lot.currentArrobas || 0) !== previousCurrentArrobas || (lot.notes || "") !== previousNotes) changed = true;
     nextLotCode = Math.max(nextLotCode, Number(lot.code || 0) + 1);
   }
   let nextAnimalCode = 1;
@@ -369,6 +373,19 @@ function hasDuplicate(db, entity, candidate, ignoreId = null) {
   const target = normalizeForDuplicate(entity, candidate);
   if (!target) return false;
   return db[entity].some((record) => record.id !== ignoreId && normalizeForDuplicate(entity, record) === target);
+}
+
+function normalizeLotRecord(record) {
+  record.quantity = Number(record.quantity || 0);
+  record.purchaseArrobas = Number(record.purchaseArrobas || 0);
+  record.currentArrobas = Number(record.currentArrobas || 0);
+  record.purchasePricePerHead = Number(record.purchasePricePerHead || 0);
+  if (record.purchaseArrobas > 1 && record.currentArrobas > 0 && record.currentArrobas < 1) {
+    record.currentArrobas = record.purchaseArrobas;
+    record.notes = `${record.notes || ""}${record.notes ? "\n" : ""}Sistema corrigiu @ atual inferior a 1@ para @ aquisição; revise a última pesagem.`.trim();
+  }
+  if (!record.currentArrobas && record.purchaseArrobas) record.currentArrobas = record.purchaseArrobas;
+  return record;
 }
 
 function nextCode(db, entity) {
@@ -1832,6 +1849,7 @@ async function routeApi(req, res, url) {
     if (db[entity].some((item) => item.id === record.id)) return send(res, 409, { error: "duplicate_id", detail: "Já existe um registro com este ID." });
     if ((entity === "lots" || entity === "animals") && !record.code) record.code = nextCode(db, entity);
     if (entity === "lots" && (record.purchaseArrobas === undefined || record.purchaseArrobas === null || record.purchaseArrobas === "")) record.purchaseArrobas = Number(record.currentArrobas || 0);
+    if (entity === "lots") normalizeLotRecord(record);
     if (entity === "supplements") record.costKg = Number(record.bagKg) ? Number(record.bagPrice) / Number(record.bagKg) : Number(record.costKg || 0);
     if ((entity === "lots" || entity === "animals") && hasDuplicate(db, entity, record)) {
       return send(res, 409, { error: "duplicate_record", detail: "Cadastro duplicado com os mesmos dados." });
@@ -1862,6 +1880,7 @@ async function routeApi(req, res, url) {
     const previousAnimalId = entity === "animalWeighings" ? db[entity][index].animalId : null;
     const previousLotId = entity === "lotWeighings" ? db[entity][index].lotId : null;
     const updated = { ...db[entity][index], ...payload, updatedAt: new Date().toISOString() };
+    if (entity === "lots") normalizeLotRecord(updated);
     if ((entity === "lots" || entity === "animals") && hasDuplicate(db, entity, updated, itemId)) {
       return send(res, 409, { error: "duplicate_record", detail: "Cadastro duplicado com os mesmos dados." });
     }
