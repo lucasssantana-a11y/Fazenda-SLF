@@ -1481,6 +1481,29 @@ document.querySelectorAll("[data-view]").forEach((item) => {
 });
 
 document.querySelector("#refreshBtn").addEventListener("click", refresh);
+document.querySelector("#backupDbBtn").addEventListener("click", async () => {
+  const backup = await api("/api/admin/backup-db");
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `fazenda-slf-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+});
+document.querySelector("#restoreDbBtn").addEventListener("click", () => {
+  document.querySelector("#restoreDbInput").click();
+});
+document.querySelector("#restoreDbInput").addEventListener("change", async (event) => {
+  const file = event.currentTarget.files?.[0];
+  event.currentTarget.value = "";
+  if (!file) return;
+  if (!confirm("Restaurar este backup vai substituir o banco atual deste ambiente. Deseja continuar?")) return;
+  const payload = JSON.parse(await file.text());
+  const result = await api("/api/admin/restore-db", { method: "POST", body: JSON.stringify(payload) });
+  alert(`Banco restaurado: ${result.lots} lotes, ${result.expenses} despesas e ${result.simulations} simulações.`);
+  await refresh();
+});
 document.querySelector("#auctionForm").addEventListener("submit", compareAuctionLots);
 document.querySelector("#loanForm").addEventListener("submit", simulateLoan);
 document.querySelector("#deleteSelectedSimulationsBtn").addEventListener("click", async () => {

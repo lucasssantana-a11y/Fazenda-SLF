@@ -192,6 +192,19 @@ button:hover {
   white-space: nowrap;
 }
 
+.sidebar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.sidebar-actions .ghost-button {
+  min-height: 34px;
+  padding: 7px 9px;
+  font-size: 12px;
+}
+
 .ghost-light {
   background: #edf4ef;
   color: var(--brand);
@@ -1174,6 +1187,10 @@ pre {
 
   .ghost-button {
     width: max-content;
+  }
+
+  .sidebar-actions {
+    justify-content: flex-start;
   }
 
   .content-grid,

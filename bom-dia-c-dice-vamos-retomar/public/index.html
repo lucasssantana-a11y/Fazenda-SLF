@@ -39,7 +39,12 @@
           <button class="nav-item" type="button" data-view="simulate">Simular</button>
           <button class="nav-item" type="button" data-view="ai">IA</button>
         </nav>
-        <button id="refreshBtn" class="ghost-button" type="button">Atualizar dados</button>
+        <div class="sidebar-actions">
+          <button id="refreshBtn" class="ghost-button" type="button">Atualizar dados</button>
+          <button id="backupDbBtn" class="ghost-button" type="button">Baixar backup</button>
+          <button id="restoreDbBtn" class="ghost-button" type="button">Restaurar banco</button>
+          <input id="restoreDbInput" type="file" accept="application/json,.json" hidden />
+        </div>
       </aside>
 
       <main class="workspace">

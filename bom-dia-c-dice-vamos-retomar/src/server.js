@@ -354,6 +354,11 @@ function send(res, status, payload, headers = {}) {
   res.end(JSON.stringify(payload));
 }
 
+function sendRawJson(res, status, payload, headers = {}) {
+  res.writeHead(status, { "content-type": "application/json; charset=utf-8", ...headers });
+  res.end(JSON.stringify(payload, null, 2));
+}
+
 async function body(req) {
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
@@ -826,6 +831,22 @@ function normalizeExpense(record) {
     record.lotId = record.lotIds[0] || "";
   }
   return record;
+}
+
+function validateRestoredDb(payload) {
+  const requiredArrays = ["lots", "expenses", "pastures", "supplements", "marketQuotes", "users"];
+  for (const key of requiredArrays) {
+    if (!Array.isArray(payload?.[key])) {
+      const error = new Error(`Backup inválido: campo ${key} ausente.`);
+      error.status = 400;
+      throw error;
+    }
+  }
+  if (!payload.settings || typeof payload.settings !== "object") {
+    const error = new Error("Backup inválido: configurações ausentes.");
+    error.status = 400;
+    throw error;
+  }
 }
 
 function recomputeMonthlyCloses(db) {
@@ -1651,6 +1672,26 @@ async function routeApi(req, res, url) {
 
   if (!authenticatedSession(db, req)) {
     return send(res, 401, { error: "unauthorized", detail: "Faça login para acessar o sistema." });
+  }
+
+  if (url.pathname === "/api/admin/backup-db" && req.method === "GET") {
+    return sendRawJson(res, 200, db, {
+      "content-disposition": `attachment; filename=\"fazenda-slf-backup-${new Date().toISOString().slice(0, 10)}.json\"`
+    });
+  }
+
+  if (url.pathname === "/api/admin/restore-db" && req.method === "POST") {
+    const restored = await body(req);
+    validateRestoredDb(restored);
+    restored.authSessions = db.authSessions || [];
+    restored.authCodes = [];
+    await saveDb(restored);
+    return send(res, 200, {
+      ok: true,
+      lots: restored.lots.length,
+      expenses: restored.expenses.length,
+      simulations: restored.simulations?.length || 0
+    });
   }
 
   if (url.pathname === "/api/db") return send(res, 200, clientDb(db));
