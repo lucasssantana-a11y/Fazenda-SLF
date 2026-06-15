@@ -1,0 +1,19 @@
+{
+  "name": "Fazenda SLF - Sistema Pecuário",
+  "short_name": "Fazenda SLF",
+  "description": "Gestão de rebanho, custos, pastos, mercado, leilão, empréstimos e simulações.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7f4",
+  "theme_color": "#255f48",
+  "icons": [
+    {
+      "src": "/logo-slf.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
