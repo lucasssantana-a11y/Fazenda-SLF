@@ -13,12 +13,13 @@ O sistema é uma aplicação Node com interface PWA. Publicado com HTTPS, ele ab
 
 O sistema exige login antes de liberar os módulos e APIs.
 
-Usuário inicial:
+Em uma base nova, configure o usuário inicial no `.env.local`:
 
-- E-mail: `lucas@fazendaslf.com`
-- Senha inicial: `FazendaSLF@2026`
+- `INITIAL_ADMIN_NAME`
+- `INITIAL_ADMIN_EMAIL`
+- `INITIAL_ADMIN_PASSWORD`
 
-Troque essa senha no banco `data/db.json` antes de uso real em produção ou peça para gerar uma nova senha hash.
+Se `data/db.json` já existir, o app mantém os usuários atuais. Troque qualquer senha inicial antes de uso real em produção.
 
 ## Publicação rápida com Docker
 

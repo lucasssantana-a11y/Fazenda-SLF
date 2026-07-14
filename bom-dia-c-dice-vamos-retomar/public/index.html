@@ -20,7 +20,7 @@
             <span>Sistema pecuário</span>
           </div>
         </div>
-        <label>E-mail<input name="email" type="email" autocomplete="username" required value="lucas@fazendaslf.com" /></label>
+        <label>E-mail<input name="email" type="email" autocomplete="username" required /></label>
         <label>Senha<input name="password" type="password" autocomplete="current-password" required /></label>
         <button type="submit">Entrar</button>
         <p id="loginMessage"></p>
@@ -28,23 +28,36 @@
     </div>
     <div id="appShell" class="app-shell" hidden>
       <aside class="sidebar">
-        <div class="brand">
-          <img class="brand-logo" src="/logo-slf.png" alt="SLF Agropecuária" />
-          <div class="brand-text">
-            <strong>SLF Agropecuária</strong>
-            <span>Decisão de recria e engorda</span>
+        <div class="sidebar-top">
+          <div class="brand">
+            <img class="brand-logo" src="/logo-slf.png" alt="SLF Agropecuária" />
+            <div class="brand-text">
+              <strong>SLF Agropecuária</strong>
+              <span>Decisão de recria e engorda</span>
+            </div>
           </div>
+          <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Recolher menu" title="Recolher menu">‹</button>
         </div>
         <nav class="nav-list" aria-label="Navegação principal">
-          <button class="nav-item active" type="button" data-view="overview">Visão geral</button>
-          <button class="nav-item" type="button" data-view="herd">Rebanho</button>
-          <button class="nav-item" type="button" data-view="costs">Custos</button>
-          <button class="nav-item" type="button" data-view="pastures">Pastos/piquetes</button>
-          <button class="nav-item" type="button" data-view="market">Mercado</button>
-          <button class="nav-item" type="button" data-view="auction">Leilão</button>
-          <button class="nav-item" type="button" data-view="loans">Empréstimos</button>
-          <button class="nav-item" type="button" data-view="simulate">Simular</button>
-          <button class="nav-item" type="button" data-view="ai">IA</button>
+          <div class="nav-section">
+            <p>Operação</p>
+            <button class="nav-item active" type="button" data-view="overview" data-short="P">Painel</button>
+            <button class="nav-item" type="button" data-view="herd" data-short="R">Rebanho</button>
+            <button class="nav-item" type="button" data-view="pastures" data-short="Pa">Pastos</button>
+          </div>
+          <div class="nav-section">
+            <p>Decisão</p>
+            <button class="nav-item" type="button" data-view="ai" data-short="I">Inteligência</button>
+            <button class="nav-item" type="button" data-view="simulate" data-short="S">Simular</button>
+            <button class="nav-item" type="button" data-view="auction" data-short="L">Leilão</button>
+            <button class="nav-item" type="button" data-view="loans" data-short="Cr">Crédito</button>
+          </div>
+          <div class="nav-section">
+            <p>Financeiro</p>
+            <button class="nav-item" type="button" data-view="costs" data-short="C">Custos</button>
+            <button class="nav-item" type="button" data-view="market" data-short="M">Mercado</button>
+            <button class="nav-item" type="button" data-view="reports" data-short="R$">Relatórios</button>
+          </div>
         </nav>
         <div class="sidebar-actions">
           <button id="refreshBtn" class="ghost-button" type="button">Atualizar dados</button>
@@ -65,50 +78,50 @@
 
         <section class="view active" id="view-overview">
           <div class="kpi-grid" id="overviewKpis"></div>
+          <div class="flow-grid">
+            <button class="flow-step" type="button" data-view="ai">
+              <span>1</span>
+              <strong>Ver inteligência</strong>
+              <small>Ranking, descarte e lotes em atenção</small>
+            </button>
+            <button class="flow-step" type="button" data-view="costs">
+              <span>2</span>
+              <strong>Lançar custo</strong>
+              <small>Despesa, nota e rateio por lote</small>
+            </button>
+            <button class="flow-step" type="button" data-view="herd">
+              <span>3</span>
+              <strong>Atualizar peso</strong>
+              <small>Pesagens, lote e foto/vídeo</small>
+            </button>
+            <button class="flow-step primary" type="button" data-view="simulate">
+              <span>4</span>
+              <strong>Decidir venda</strong>
+              <small>Venda agora, segurar ou descartar</small>
+            </button>
+          </div>
           <section class="panel dashboard-panel">
             <div class="section-head">
               <div>
-                <h2>Dashboard executivo</h2>
-                <span>Estoque, crescimento e projeção por IA preditiva local</span>
+                <h2>Radar de decisão dos lotes</h2>
+                <span>Margem, custo, GMD e alerta operacional</span>
               </div>
               <label class="inline-filter">Visão<select id="dashboardLotSelect"></select></label>
             </div>
             <div id="dashboardInsights" class="insight-strip"></div>
             <div id="growthCharts" class="chart-grid growth-chart-grid"></div>
           </section>
-          <div class="flow-grid">
-            <button class="flow-step" type="button" data-view="herd">
-              <span>1</span>
-              <strong>Atualizar rebanho</strong>
-              <small>Lotes, animais e datas de entrada</small>
-            </button>
-            <button class="flow-step" type="button" data-view="costs">
-              <span>2</span>
-              <strong>Lançar custos</strong>
-              <small>Suplementos, fretes, manejo e notinhas</small>
-            </button>
-            <button class="flow-step" type="button" data-view="pastures">
-              <span>3</span>
-              <strong>Controlar pasto</strong>
-              <small>Entrada, saída e condição da pastagem</small>
-            </button>
-            <button class="flow-step primary" type="button" data-view="simulate">
-              <span>4</span>
-              <strong>Decidir venda</strong>
-              <small>GMD, meta, lucro, giro e risco</small>
-            </button>
-          </div>
           <div class="content-grid">
             <section class="panel">
               <div class="section-head">
-                <h2>Lotes ativos</h2>
+                <h2>Rebanho em foco</h2>
                 <button class="link-button" type="button" data-view="herd">Gerenciar</button>
               </div>
               <div id="overviewLots"></div>
             </section>
             <section class="panel">
               <div class="section-head">
-                <h2>Últimos custos</h2>
+                <h2>Movimentos recentes</h2>
                 <button class="link-button" type="button" data-view="costs">Lançar</button>
               </div>
               <div id="overviewExpenses"></div>
@@ -117,151 +130,172 @@
         </section>
 
         <section class="view" id="view-herd">
-          <div class="split-layout">
+          <div class="module-tabs" aria-label="Fluxos do rebanho">
+            <button class="active" type="button" data-module-group="herd" data-module-tab="lots">Lotes</button>
+            <button type="button" data-module-group="herd" data-module-tab="weighings">Pesagens</button>
+            <button type="button" data-module-group="herd" data-module-tab="animals">Animais individuais</button>
+          </div>
+
+          <div class="module-pane active" data-module-group="herd" data-module-pane="lots">
+            <div class="split-layout feature-layout">
+              <section class="panel form-panel">
+                <div class="section-head">
+                  <div><h2>Novo lote</h2><span>Entrada do grupo comprado ou formado</span></div>
+                </div>
+                <form id="lotForm" class="form-grid focused-form">
+                  <label class="full">Nome<input name="name" required placeholder="Lote leilão maio" /></label>
+                  <label>Quantidade<input name="quantity" type="number" min="0" value="1" /></label>
+                  <label>Entrada<input name="entryDate" type="date" /></label>
+                  <label>Compra/cab<input name="purchasePricePerHead" type="number" step="1" value="1950" /></label>
+                  <label>@ aquisição<input name="purchaseArrobas" type="number" step="0.1" value="6.5" /></label>
+                  <label>@ atual<input name="currentArrobas" type="number" step="0.1" value="7" /></label>
+                  <label>Categoria<input name="category" placeholder="Bezerra, novilha..." /></label>
+                  <label>Origem<input name="origin" placeholder="Leilão, fazenda..." /></label>
+                  <label>Idade meses<input name="estimatedAgeMonths" type="number" step="1" /></label>
+                  <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
+                  <button type="submit">Cadastrar lote</button>
+                </form>
+              </section>
+              <section class="panel">
+                <div class="section-head"><h2>Lotes cadastrados</h2><span>Base ativa para custos e decisões</span></div>
+                <div id="lotsTable"></div>
+              </section>
+            </div>
+          </div>
+
+          <div class="module-pane" data-module-group="herd" data-module-pane="weighings">
+            <div class="split-layout">
+              <section class="panel form-panel">
+                <div class="section-head"><h2>Pesagem individual</h2><span>Por brinco ou identificação</span></div>
+                <form id="weighingForm" class="form-grid focused-form">
+                  <label>Animal<select name="animalId" id="weighingAnimalSelect"></select></label>
+                  <label>Data<input name="date" type="date" /></label>
+                  <label>Peso vivo kg<input name="weightKg" type="number" step="0.1" required /></label>
+                  <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
+                  <label class="full">Brinco / identificação<input name="tagSnapshot" placeholder="Preenchido pelo animal selecionado" /></label>
+                  <label class="full">Fotos/vídeos do animal<input name="animalPhoto" type="file" accept="image/*,video/*" multiple /></label>
+                  <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
+                  <button id="estimateWeightBtn" class="ghost-light" type="button">Estimar peso por IA</button>
+                  <button type="submit">Registrar pesagem</button>
+                </form>
+                <div id="aiWeightResult" class="ai-weight-result"></div>
+              </section>
+              <section class="panel form-panel">
+                <div class="section-head"><h2>Pesagem do lote</h2><span>Foto coletiva ou peso médio</span></div>
+                <form id="lotWeighingForm" class="form-grid focused-form">
+                  <label>Lote<select name="lotId" id="lotWeighingLotSelect"></select></label>
+                  <label>Data<input name="date" type="date" /></label>
+                  <label>Qtd. avaliada<input name="quantityEvaluated" type="number" min="1" /></label>
+                  <label>Peso médio kg<input name="averageWeightKg" type="number" step="0.1" required /></label>
+                  <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
+                  <label class="full">Fotos/vídeos do lote<input name="lotPhoto" type="file" accept="image/*,video/*" multiple /></label>
+                  <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
+                  <button id="estimateLotWeightBtn" class="ghost-light" type="button">Estimar média por IA</button>
+                  <button type="submit">Registrar pesagem</button>
+                </form>
+                <div id="aiLotWeightResult" class="ai-weight-result"></div>
+              </section>
+            </div>
             <section class="panel">
-              <div class="section-head"><h2>Novo lote</h2><span>Cadastro rápido</span></div>
-              <form id="lotForm" class="form-grid">
-                <label>Nome<input name="name" required placeholder="Lote leilão maio" /></label>
-                <label>Quantidade<input name="quantity" type="number" min="0" value="1" /></label>
-                <label>Entrada<input name="entryDate" type="date" /></label>
-                <label>@ aquisição<input name="purchaseArrobas" type="number" step="0.1" value="6.5" /></label>
-                <label>@ atual<input name="currentArrobas" type="number" step="0.1" value="7" /></label>
-                <label>Compra/cab<input name="purchasePricePerHead" type="number" step="1" value="1950" /></label>
-                <label>Categoria<input name="category" placeholder="Bezerra, novilha..." /></label>
-                <label>Origem<input name="origin" placeholder="Leilão, fazenda..." /></label>
-                <label>Idade estimada meses<input name="estimatedAgeMonths" type="number" step="1" /></label>
-                <label class="full">Notas<textarea name="notes" rows="3"></textarea></label>
-                <button type="submit">Cadastrar lote</button>
-              </form>
-            </section>
-            <section class="panel">
-              <div class="section-head"><h2>Animal individual</h2><span>Opcional</span></div>
-              <form id="animalForm" class="form-grid">
-                <label>Identificação<input name="tag" required placeholder="Brinco 024" /></label>
-                <label>Lote<select name="lotId" id="animalLotSelect"></select></label>
-                <label>@ atual<input name="currentArrobas" type="number" step="0.1" /></label>
-                <label>Entrada<input name="entryDate" type="date" /></label>
-                <button type="submit">Cadastrar animal</button>
-              </form>
+              <div class="section-head"><h2>Histórico de pesagens</h2><span>Últimos registros por animal e por lote</span></div>
+              <div id="weighingTables"></div>
             </section>
           </div>
-          <div class="split-layout">
-            <section class="panel">
-              <div class="section-head"><h2>Pesagem individual</h2></div>
-              <form id="weighingForm" class="form-grid">
-                <label>Animal<select name="animalId" id="weighingAnimalSelect"></select></label>
-                <label>Brinco / identificação<input name="tagSnapshot" placeholder="Preenchido pelo animal selecionado" /></label>
-                <label>Data<input name="date" type="date" /></label>
-                <label>Peso vivo kg<input name="weightKg" type="number" step="0.1" required /></label>
-                <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
-                <label class="full">Fotos/vídeos do animal<input name="animalPhoto" type="file" accept="image/*,video/*" multiple /></label>
-                <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
-                <button id="estimateWeightBtn" class="ghost-light" type="button">Estimar peso por IA</button>
-                <button type="submit">Registrar pesagem</button>
-              </form>
-              <div id="aiWeightResult" class="ai-weight-result"></div>
-            </section>
-            <section class="panel">
-              <div class="section-head"><h2>Pesagem do lote</h2><span>Foto coletiva / peso médio</span></div>
-              <form id="lotWeighingForm" class="form-grid">
-                <label>Lote<select name="lotId" id="lotWeighingLotSelect"></select></label>
-                <label>Data<input name="date" type="date" /></label>
-                <label>Quantidade avaliada<input name="quantityEvaluated" type="number" min="1" /></label>
-                <label>Peso médio kg<input name="averageWeightKg" type="number" step="0.1" required /></label>
-                <label>Origem<select name="source"><option>Manual</option><option>Balança</option><option>IA por foto</option><option>Integração futura</option></select></label>
-                <label class="full">Fotos/vídeos do lote<input name="lotPhoto" type="file" accept="image/*,video/*" multiple /></label>
-                <label class="full">Notas<textarea name="notes" rows="2"></textarea></label>
-                <button id="estimateLotWeightBtn" class="ghost-light" type="button">Estimar média do lote por IA</button>
-                <button type="submit">Registrar pesagem do lote</button>
-              </form>
-              <div id="aiLotWeightResult" class="ai-weight-result"></div>
-            </section>
+
+          <div class="module-pane" data-module-group="herd" data-module-pane="animals">
+            <div class="split-layout feature-layout">
+              <section class="panel form-panel">
+                <div class="section-head"><h2>Animal individual</h2><span>Opcional para acompanhamento por brinco</span></div>
+                <form id="animalForm" class="form-grid focused-form">
+                  <label class="full">Identificação<input name="tag" required placeholder="Brinco 024" /></label>
+                  <label>Lote<select name="lotId" id="animalLotSelect"></select></label>
+                  <label>@ atual<input name="currentArrobas" type="number" step="0.1" /></label>
+                  <label>Entrada<input name="entryDate" type="date" /></label>
+                  <button type="submit">Cadastrar animal</button>
+                </form>
+              </section>
+              <section class="panel">
+                <div class="section-head"><h2>Animais cadastrados</h2><span>Base para pesagens individuais</span></div>
+                <div id="animalsTable"></div>
+              </section>
+            </div>
           </div>
-          <section class="panel">
-            <div class="section-head"><h2>Rebanho cadastrado</h2></div>
-            <div id="herdTables"></div>
-          </section>
         </section>
 
         <section class="view" id="view-costs">
-          <div class="split-layout">
-            <section class="panel">
-              <div class="section-head"><h2>Despesa</h2></div>
-              <form id="expenseForm" class="form-grid">
+          <div class="module-tabs" aria-label="Fluxos de custos">
+            <button class="active" type="button" data-module-group="costs" data-module-tab="expense-entry">Lançar despesa</button>
+            <button type="button" data-module-group="costs" data-module-tab="expense-history">Histórico</button>
+            <button type="button" data-module-group="costs" data-module-tab="cost-allocation">Apropriação</button>
+            <button type="button" data-module-group="costs" data-module-tab="supplements">Insumos</button>
+          </div>
+
+          <div class="module-pane active" data-module-group="costs" data-module-pane="expense-entry">
+            <section class="panel form-panel expense-entry-panel">
+              <div class="section-head">
+                <div><h2>Nova despesa</h2><span>Lançamento rápido com comprovante</span></div>
+              </div>
+              <form id="expenseForm" class="form-grid focused-form expense-mobile-form">
                 <label>Categoria<select name="expenseCategoryId" id="expenseCategorySelect"></select></label>
                 <label class="full">Descrição<input name="description" required placeholder="Suplemento, frete, sal..." /></label>
-                <label>Valor<input name="amount" type="number" step="0.01" required /></label>
+                <label>Valor<input name="amount" type="text" inputmode="decimal" required placeholder="0,00" /></label>
                 <label>Data<input name="date" type="date" /></label>
                 <label>Rateio<select name="allocationMode" id="expenseAllocationMode"><option value="all_lots_by_headcount">Todos os lotes por cabeça</option><option value="specific_lots">Lotes selecionados por cabeça</option></select></label>
                 <label>Vincular a lotes<select name="lotIds" id="expenseLotSelect" multiple size="4" disabled></select></label>
-                <label class="full">Foto da nota<input name="receipt" type="file" accept="image/*" /></label>
-                <button type="submit">Lançar despesa</button>
-              </form>
+                  <label class="full receipt-capture-card">Foto da nota<input name="receipt" type="file" accept="image/*" capture="environment" /></label>
+                  <div id="receiptPreviewInline" class="receipt-inline-preview full" aria-live="polite"></div>
+                  <div id="receiptOcrResult" class="ai-weight-result full"></div>
+                  <button id="analyzeReceiptBtn" class="ghost-light" type="button">Ler notinha por IA/OCR</button>
+                  <button type="submit">Lançar despesa</button>
+                </form>
             </section>
+          </div>
+
+          <div class="module-pane" data-module-group="costs" data-module-pane="expense-history">
             <section class="panel">
-              <div class="section-head"><h2>Suplementos</h2></div>
+              <div class="section-head"><h2>Histórico de custos</h2></div>
+              <div class="expense-filters">
+                <label class="wide">Pesquisar<input id="expenseSearch" type="search" placeholder="Descrição, categoria, lote ou valor..." /></label>
+                <label>Categoria<select id="expenseCategoryFilter"></select></label>
+                <label>Lote<select id="expenseLotFilter"></select></label>
+                <label>Data inicial<input id="expenseDateFrom" type="date" /></label>
+                <label>Data final<input id="expenseDateTo" type="date" /></label>
+                <label>Valor mínimo<input id="expenseAmountMin" type="number" step="0.01" /></label>
+                <label>Valor máximo<input id="expenseAmountMax" type="number" step="0.01" /></label>
+                <label>Organizar por
+                  <select id="expenseSort">
+                    <option value="date-desc">Data mais recente</option>
+                    <option value="date-asc">Data mais antiga</option>
+                    <option value="amount-desc">Maior valor</option>
+                    <option value="amount-asc">Menor valor</option>
+                  </select>
+                </label>
+                <div class="filter-actions">
+                  <button id="clearExpenseFilters" type="button" class="secondary-button">Limpar filtros</button>
+                </div>
+              </div>
+              <div id="expensesTable"></div>
+            </section>
+          </div>
+
+          <div class="module-pane" data-module-group="costs" data-module-pane="cost-allocation">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <h2>Apropriação de custos por lote</h2>
+                  <span>Compra, despesas na vigência do lote, custo por cabeça e por arroba</span>
+                </div>
+              </div>
+              <div id="costAppropriationReport"></div>
+            </section>
+          </div>
+
+          <div class="module-pane" data-module-group="costs" data-module-pane="supplements">
+            <section class="panel">
+              <div class="section-head"><h2>Insumos e suplementos</h2></div>
               <div id="supplementsTable"></div>
             </section>
           </div>
-          <section class="panel">
-            <div class="section-head"><h2>Histórico de custos</h2></div>
-            <div class="expense-filters">
-              <label class="wide">Pesquisar<input id="expenseSearch" type="search" placeholder="Descrição, categoria, lote ou valor..." /></label>
-              <label>Categoria<select id="expenseCategoryFilter"></select></label>
-              <label>Lote<select id="expenseLotFilter"></select></label>
-              <label>Data inicial<input id="expenseDateFrom" type="date" /></label>
-              <label>Data final<input id="expenseDateTo" type="date" /></label>
-              <label>Valor mínimo<input id="expenseAmountMin" type="number" step="0.01" /></label>
-              <label>Valor máximo<input id="expenseAmountMax" type="number" step="0.01" /></label>
-              <label>Organizar por
-                <select id="expenseSort">
-                  <option value="date-desc">Data mais recente</option>
-                  <option value="date-asc">Data mais antiga</option>
-                  <option value="amount-desc">Maior valor</option>
-                  <option value="amount-asc">Menor valor</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button id="clearExpenseFilters" type="button" class="secondary-button">Limpar filtros</button>
-              </div>
-            </div>
-            <div id="expensesTable"></div>
-          </section>
-          <section class="panel">
-            <div class="section-head">
-              <div>
-                <h2>Apropriação de custos por lote</h2>
-                <span>Compra, despesas na vigência do lote, custo por cabeça e por arroba</span>
-              </div>
-            </div>
-            <div id="costAppropriationReport"></div>
-          </section>
-          <section class="panel">
-            <div class="section-head">
-              <div>
-                <h2>DRE gerencial do lote</h2>
-                <span>Receita, custos, resultado, margem, ROI, TIR, meta 12@ e projeção de caixa</span>
-              </div>
-            </div>
-            <form id="lotManagementReportForm" class="form-grid compact-form">
-              <label class="full">Lote<select name="lotId" id="managementReportLotSelect"></select></label>
-              <label>Meta de venda @<input name="targetArrobas" type="number" step="0.1" value="12" /></label>
-              <label>GMD kg/dia<input name="gmdKgDay" type="number" step="0.05" value="0.5" /></label>
-              <label>Preço @ venda<input name="arrobaPrice" type="text" inputmode="decimal" value="330" /></label>
-              <label>Proteinado % PV<input name="fortisPercentPv" type="number" step="0.1" value="0.1" /></label>
-              <label>Proteico energético % PV<input name="comigoPercentPv" type="number" step="0.1" value="0.3" /></label>
-              <label>Custo op. R$/cab/dia<input name="operatingCostPerHeadDay" type="number" step="0.1" value="0" /></label>
-              <label>Terra própria R$/cab/mês<input name="landOwnCostMonth" type="text" inputmode="decimal" value="0" /></label>
-              <label>Mortalidade esperada %<input name="mortalityRate" type="number" step="0.1" value="0" /></label>
-              <label>CDI a.a. %<input name="cdiAnnualRate" type="number" step="0.01" /></label>
-              <label>IPCA 12m %<input name="ipcaAnnualRate" type="number" step="0.01" /></label>
-              <button type="submit">Gerar relatório</button>
-            </form>
-            <div class="report-actions">
-              <button id="printManagementReportBtn" type="button" class="secondary-button">Imprimir / salvar PDF</button>
-            </div>
-            <div id="lotManagementReport"></div>
-          </section>
         </section>
 
         <section class="view" id="view-pastures">
@@ -471,6 +505,38 @@
             </div>
             <div id="loanResult"></div>
           </section>
+          <section class="panel">
+            <div class="section-head">
+              <h2>Histórico de crédito</h2>
+              <span>Últimas simulações salvas automaticamente</span>
+            </div>
+            <div id="loanHistory"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-reports">
+          <section class="panel dashboard-panel">
+            <div class="section-head">
+              <div>
+                <h2>Relatório executivo</h2>
+                <span>Estoque, custos, decisões, crédito, leilão e próximos ajustes</span>
+              </div>
+              <div class="row-actions">
+                <button id="refreshExecutiveReportBtn" class="link-button" type="button">Atualizar</button>
+                <button id="printExecutiveReportBtn" class="link-button" type="button">Imprimir / PDF</button>
+              </div>
+            </div>
+            <div id="executiveReport"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Prontidão para Postgres</h2>
+                <span>Modo local ativo e caminho de migração para banco real</span>
+              </div>
+            </div>
+            <div id="dbReadiness"></div>
+          </section>
         </section>
 
         <section class="view" id="view-simulate">
@@ -532,13 +598,55 @@
         <section class="view" id="view-ai">
           <section class="panel">
             <div class="section-head">
-              <h2>Motores de IA</h2>
-              <span>OpenAI / Gemini</span>
+              <div>
+                <h2>Inteligência operacional</h2>
+                <span>Comparação de lotes, performance e descarte</span>
+              </div>
+            </div>
+            <div class="kpi-grid" id="lotIntelligenceKpis"></div>
+            <div id="lotIntelligenceAlerts" class="recommendation-grid"></div>
+            <div id="lotPerformanceRanking"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>DRE gerencial do lote</h2>
+                <span>Receita, custos, resultado, margem, ROI, TIR, meta 12@ e projeção de caixa</span>
+              </div>
+            </div>
+            <form id="lotManagementReportForm" class="form-grid compact-form">
+              <label class="full">Lote<select name="lotId" id="managementReportLotSelect"></select></label>
+              <label>Meta de venda @<input name="targetArrobas" type="number" step="0.1" value="12" /></label>
+              <label>GMD kg/dia<input name="gmdKgDay" type="number" step="0.05" value="0.5" /></label>
+              <label>Preço @ venda<input name="arrobaPrice" type="text" inputmode="decimal" value="330" /></label>
+              <label>Proteinado % PV<input name="fortisPercentPv" type="number" step="0.1" value="0.1" /></label>
+              <label>Proteico energético % PV<input name="comigoPercentPv" type="number" step="0.1" value="0.3" /></label>
+              <label>Custo op. R$/cab/dia<input name="operatingCostPerHeadDay" type="number" step="0.1" value="0" /></label>
+              <label>Terra própria R$/cab/mês<input name="landOwnCostMonth" type="text" inputmode="decimal" value="0" /></label>
+              <label>Mortalidade esperada %<input name="mortalityRate" type="number" step="0.1" value="0" /></label>
+              <label>CDI a.a. %<input name="cdiAnnualRate" type="number" step="0.01" /></label>
+              <label>IPCA 12m %<input name="ipcaAnnualRate" type="number" step="0.01" /></label>
+              <button type="submit">Gerar relatório</button>
+            </form>
+            <div class="report-actions">
+              <button id="printManagementReportBtn" type="button" class="secondary-button">Imprimir / salvar PDF</button>
+            </div>
+            <div id="lotManagementReport"></div>
+          </section>
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Sinais externos</h2>
+                <span>Ciclo, mercado, CDI e inflação</span>
+              </div>
             </div>
             <div class="ai-placeholder">
-              <strong>Endpoint preparado</strong>
-              <p>O próximo passo é configurar provedor, chave, trilha de auditoria e prompts de análise para explicar cenários e validar hipóteses sem misturar dado operacional com palpite.</p>
               <div id="aiInsights" class="ai-insights"></div>
+              <form id="decisionBriefForm" class="form-grid compact-form">
+                <label class="full">Brief de decisão por lote<select name="lotId" id="decisionBriefLotSelect"></select></label>
+                <button type="submit">Gerar brief</button>
+              </form>
+              <div id="decisionBriefResult"></div>
               <button id="testAiBtn" type="button">Testar contrato da IA</button>
               <pre id="aiResult"></pre>
             </div>
@@ -577,6 +685,7 @@
       <img id="receiptPreview" alt="Comprovante da despesa" />
     </dialog>
 
+    <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
     <script src="/app.js" type="module"></script>
   </body>
 </html>

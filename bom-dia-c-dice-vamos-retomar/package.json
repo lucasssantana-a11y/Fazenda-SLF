@@ -1,11 +1,12 @@
 {
   "name": "simulador-pecuaria-api-first",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "verify:integrated": "node verify_integrated.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"

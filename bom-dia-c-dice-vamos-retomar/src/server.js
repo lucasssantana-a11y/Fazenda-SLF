@@ -31,6 +31,10 @@ function loadLocalEnv() {
 
 loadLocalEnv();
 
+const initialAdminEmail = process.env.INITIAL_ADMIN_EMAIL || "admin@fazenda.local";
+const initialAdminPassword = process.env.INITIAL_ADMIN_PASSWORD || "troque-esta-senha";
+const initialAdminName = process.env.INITIAL_ADMIN_NAME || "Administrador";
+
 function hashPassword(salt, password) {
   return crypto.createHash("sha256").update(`${salt}:${password}`).digest("hex");
 }
@@ -51,12 +55,12 @@ const defaultDb = {
   },
   users: [
     {
-      id: "user-lucas",
-      name: "Lucas Santana",
-      email: "lucas@fazendaslf.com",
+      id: "user-admin",
+      name: initialAdminName,
+      email: initialAdminEmail,
       role: "admin",
       passwordSalt: "slf-local",
-      passwordHash: hashPassword("slf-local", "FazendaSLF@2026")
+      passwordHash: hashPassword("slf-local", initialAdminPassword)
     }
   ],
   authSessions: [],
@@ -190,12 +194,13 @@ const defaultDb = {
   cycleSignals: [
     { id: "cycle-initial", date: "2026-05-04", phase: "transicao_baixa_para_alta", confidence: 0.7, source: "Modelo operacional informado", notes: "Brasil em transição de baixa para alta; reposição cara, arroba com alta gradual e margem pressionada no curto prazo." }
   ],
-  simulations: []
-  ,
-  auctionComparisons: []
+  simulations: [],
+  auctionComparisons: [],
+  loanScenarios: [],
+  receiptAnalyses: []
 };
 
-const entities = new Set(["lots", "animals", "animalWeighings", "lotWeighings", "expenseCategories", "expenses", "pastures", "pastureMovements", "supplements", "marketQuotes", "marketMonthlyCloses", "marketCostBenchmarks", "marketHistory", "financialIndicators", "riskFactors", "cycleSignals", "simulations", "auctionComparisons"]);
+const entities = new Set(["lots", "animals", "animalWeighings", "lotWeighings", "expenseCategories", "expenses", "pastures", "pastureMovements", "supplements", "marketQuotes", "marketMonthlyCloses", "marketCostBenchmarks", "marketHistory", "financialIndicators", "riskFactors", "cycleSignals", "simulations", "auctionComparisons", "loanScenarios", "receiptAnalyses"]);
 
 async function ensureDb() {
   await mkdir(dataDir, { recursive: true });
@@ -386,6 +391,40 @@ function normalizeLotRecord(record) {
   }
   if (!record.currentArrobas && record.purchaseArrobas) record.currentArrobas = record.purchaseArrobas;
   return record;
+}
+
+function isIsoDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "")) && !Number.isNaN(new Date(`${value}T00:00:00`).getTime());
+}
+
+function validateExpenseRecord(record, db) {
+  const amount = Number(record.amount || 0);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return "Informe um valor de despesa maior que zero.";
+  }
+  if (!String(record.description || "").trim()) {
+    return "Informe uma descrição para a despesa.";
+  }
+  if (record.date && !isIsoDate(record.date)) {
+    return "Informe uma data válida para a despesa.";
+  }
+  if (record.expenseCategoryId && !db.expenseCategories.some((category) => category.id === record.expenseCategoryId)) {
+    return "Categoria de despesa não encontrada.";
+  }
+  if (record.allocationMode === "specific_lots") {
+    if (!record.lotIds.length) return "Selecione ao menos um lote para este rateio.";
+    const missingLot = record.lotIds.find((lotId) => !db.lots.some((lot) => lot.id === lotId));
+    if (missingLot) return "Um dos lotes selecionados não existe mais na base.";
+    const inactiveLot = record.date
+      ? record.lotIds.map((lotId) => db.lots.find((lot) => lot.id === lotId)).find((lot) => lot?.entryDate && String(lot.entryDate) > String(record.date))
+      : null;
+    if (inactiveLot) return `O lote ${inactiveLot.name || inactiveLot.id} entrou depois da data da despesa. Ajuste a data ou o rateio.`;
+  }
+  if (record.allocationMode === "all_lots_by_headcount" && record.date) {
+    const activeLots = db.lots.filter((lot) => !lot.entryDate || String(lot.entryDate) <= String(record.date));
+    if (!activeLots.length) return "Nenhum lote estava ativo na data da despesa.";
+  }
+  return "";
 }
 
 function nextCode(db, entity) {
@@ -688,6 +727,34 @@ async function callOpenAiVisionJson(prompt, visualItems) {
   return parseJsonObject(outputTextFromResponse(payload));
 }
 
+async function callOpenAiTextJson(prompt, context) {
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: process.env.OPENAI_TEXT_MODEL || "gpt-4.1",
+      input: [{
+        role: "user",
+        content: [{
+          type: "input_text",
+          text: `${prompt}\n\nContexto JSON:\n${JSON.stringify(context, null, 2)}`
+        }]
+      }]
+    })
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(payload.error?.message || "Falha ao chamar a OpenAI.");
+    error.status = response.status;
+    throw error;
+  }
+  return parseJsonObject(outputTextFromResponse(payload));
+}
+
 function referenceWeightKgForContext(context, db, mode) {
   const conversion = context?.conversion || db.settings;
   const pv = (arrobas) => Number(arrobas || 0) * Number(conversion.liveArrobaKg || 30);
@@ -863,6 +930,161 @@ function allocatedExpenseForLot(db, expense, lot) {
 function allocatedExpensesForLot(db, lot) {
   if (!lot?.id) return 0;
   return db.expenses.reduce((sum, expense) => sum + allocatedExpenseForLot(db, expense, lot), 0);
+}
+
+function daysBetweenDates(startDate, endDate = new Date()) {
+  if (!startDate) return null;
+  const start = new Date(`${String(startDate).slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(start.getTime())) return null;
+  const end = endDate instanceof Date ? endDate : new Date(endDate);
+  return Math.max(0, Math.round((end.getTime() - start.getTime()) / 86400000));
+}
+
+function lotPerformanceRecommendation(metrics) {
+  if (!metrics.quantity) {
+    return {
+      action: "revisar_cadastro",
+      label: "Revisar cadastro",
+      severity: "atenção",
+      reason: "Lote sem quantidade de animais para comparar performance."
+    };
+  }
+  if (metrics.potentialResultPerHead < -150 && metrics.estimatedGmdKgDay < 0.25) {
+    return {
+      action: "descarte_prioritario",
+      label: "Descarte prioritário",
+      severity: "crítico",
+      reason: "Resultado potencial negativo e ganho estimado baixo indicam capital preso em lote fraco."
+    };
+  }
+  if (metrics.estimatedGmdKgDay < 0.18 && metrics.daysInFarm !== null && metrics.daysInFarm >= 60) {
+    return {
+      action: "descarte_tecnico",
+      label: "Avaliar descarte",
+      severity: "crítico",
+      reason: "Ganho estimado muito baixo para o tempo em fazenda."
+    };
+  }
+  if (metrics.potentialResultPerHead < 0 || metrics.totalCostPerCurrentArroba > metrics.marketPricePerArroba * 0.92) {
+    return {
+      action: "observacao",
+      label: "Observar de perto",
+      severity: "atenção",
+      reason: "Margem apertada ou custo por arroba próximo demais do preço de venda."
+    };
+  }
+  if (metrics.estimatedGmdKgDay >= 0.45 && metrics.potentialMargin >= 0.12) {
+    return {
+      action: "manter",
+      label: "Manter e ganhar peso",
+      severity: "ok",
+      reason: "Ganho estimado e margem potencial sustentam permanência no sistema."
+    };
+  }
+  if (metrics.potentialResultPerHead > 0 && metrics.producedArrobasPerHead <= 0.4) {
+    return {
+      action: "giro_curto",
+      label: "Preparar giro",
+      severity: "ok",
+      reason: "Resultado positivo, mas ainda com pouca arroba produzida; simular venda em janela curta."
+    };
+  }
+  return {
+    action: "monitorar",
+    label: "Monitorar",
+    severity: "neutro",
+    reason: "Lote sem sinal extremo; comparar com os demais e atualizar pesagens."
+  };
+}
+
+function lotPerformanceIntelligence(db) {
+  const quote = [...(db.marketQuotes || [])].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0] || null;
+  const marketPricePerArroba = Number(quote?.arrobaPrice || db.settings?.arrobaPrice || 0);
+  const generatedAtDate = new Date();
+  const lots = (db.lots || []).map((lot) => {
+    const quantity = Number(lot.quantity || 0);
+    const purchaseArrobas = Number(lot.purchaseArrobas || lot.currentArrobas || 0);
+    const currentArrobas = Number(lot.currentArrobas || purchaseArrobas || 0);
+    const purchasePricePerHead = Number(lot.purchasePricePerHead || 0);
+    const allocatedCostTotal = allocatedExpensesForLot(db, lot);
+    const allocatedCostPerHead = quantity ? allocatedCostTotal / quantity : 0;
+    const investedPerHead = purchasePricePerHead + allocatedCostPerHead;
+    const currentValuePerHead = currentArrobas * marketPricePerArroba;
+    const potentialResultPerHead = currentValuePerHead - investedPerHead;
+    const potentialResultTotal = potentialResultPerHead * quantity;
+    const potentialMargin = currentValuePerHead ? potentialResultPerHead / currentValuePerHead : 0;
+    const stockArrobas = currentArrobas * quantity;
+    const totalCostPerCurrentArroba = currentArrobas ? investedPerHead / currentArrobas : 0;
+    const producedArrobasPerHead = Math.max(0, currentArrobas - purchaseArrobas);
+    const daysInFarm = daysBetweenDates(lot.entryDate, generatedAtDate);
+    const estimatedGmdKgDay = daysInFarm && daysInFarm > 0 ? (producedArrobasPerHead * 30) / daysInFarm : 0;
+    const costPressure = marketPricePerArroba ? Math.min(1.4, totalCostPerCurrentArroba / marketPricePerArroba) : 1;
+    const marginScore = Math.max(0, Math.min(35, (potentialMargin + 0.1) * 100));
+    const gmdScore = Math.max(0, Math.min(30, estimatedGmdKgDay * 55));
+    const resultScore = potentialResultPerHead >= 0 ? Math.min(20, potentialResultPerHead / 20) : Math.max(-20, potentialResultPerHead / 25);
+    const costScore = Math.max(-20, Math.min(15, (1 - costPressure) * 60));
+    const dataScore = lot.entryDate ? 10 : 2;
+    const score = Math.round(Math.max(0, Math.min(100, 45 + marginScore + gmdScore + resultScore + costScore + dataScore - 35)));
+    const metrics = {
+      lotId: lot.id,
+      code: lot.code || "",
+      lotName: lot.name || lot.id,
+      quantity,
+      entryDate: lot.entryDate || "",
+      daysInFarm,
+      purchaseArrobas,
+      currentArrobas,
+      stockArrobas,
+      producedArrobasPerHead,
+      estimatedGmdKgDay,
+      purchasePricePerHead,
+      allocatedCostTotal,
+      allocatedCostPerHead,
+      investedPerHead,
+      currentValuePerHead,
+      currentValueTotal: currentValuePerHead * quantity,
+      potentialResultPerHead,
+      potentialResultTotal,
+      potentialMargin,
+      totalCostPerCurrentArroba,
+      marketPricePerArroba,
+      score
+    };
+    return {
+      ...metrics,
+      recommendation: lotPerformanceRecommendation(metrics)
+    };
+  }).sort((a, b) => a.score - b.score);
+
+  const averageScore = lots.length ? lots.reduce((sum, lot) => sum + lot.score, 0) / lots.length : 0;
+  const discardCandidates = lots.filter((lot) => ["descarte_prioritario", "descarte_tecnico"].includes(lot.recommendation.action));
+  const observationCandidates = lots.filter((lot) => lot.recommendation.severity === "atenção");
+  const bestLots = [...lots].sort((a, b) => b.score - a.score).slice(0, 3);
+  return {
+    generatedAt: generatedAtDate.toISOString(),
+    marketReference: {
+      date: quote?.date || "",
+      source: quote?.source || "Manual",
+      region: quote?.region || "",
+      arrobaPrice: marketPricePerArroba
+    },
+    summary: {
+      lotCount: lots.length,
+      averageScore,
+      discardCandidateCount: discardCandidates.length,
+      observationCandidateCount: observationCandidates.length,
+      totalPotentialResult: lots.reduce((sum, lot) => sum + lot.potentialResultTotal, 0),
+      totalStockArrobas: lots.reduce((sum, lot) => sum + lot.stockArrobas, 0)
+    },
+    lots,
+    discardCandidates,
+    bestLots,
+    notes: [
+      "A recomendação é operacional e determinística; confirme descarte com pesagem recente, sanidade e condição corporal.",
+      "O resultado potencial usa valor de estoque pela arroba atual menos compra e despesas alocadas.",
+      "GMD estimado depende da data de entrada e da diferença entre @ aquisição e @ atual."
+    ]
+  };
 }
 
 function normalizeExpense(record) {
@@ -1643,6 +1865,260 @@ function simulateLoan(input, db) {
   };
 }
 
+function sum(values) {
+  return values.reduce((total, value) => total + Number(value || 0), 0);
+}
+
+function executiveReport(db) {
+  const performance = lotPerformanceIntelligence(db);
+  const insights = intelligenceInsights(db);
+  const lots = db.lots || [];
+  const expenses = db.expenses || [];
+  const simulations = db.simulations || [];
+  const auctionComparisons = db.auctionComparisons || [];
+  const loanScenarios = db.loanScenarios || [];
+  const marketPrice = Number(performance.marketReference?.arrobaPrice || db.settings?.arrobaPrice || 0);
+  const totalHeads = sum(lots.map((lot) => lot.quantity));
+  const totalStockArrobas = sum(lots.map((lot) => Number(lot.currentArrobas || 0) * Number(lot.quantity || 0)));
+  const acquisitionValue = sum(lots.map((lot) => Number(lot.purchasePricePerHead || 0) * Number(lot.quantity || 0)));
+  const stockValue = totalStockArrobas * marketPrice;
+  const expenseTotal = sum(expenses.map((expense) => expense.amount));
+  const bestLot = performance.bestLots?.[0] || null;
+  const worstLot = performance.lots?.[0] || null;
+  const latestSimulation = simulations[0] || null;
+  const latestLoan = loanScenarios[0] || null;
+  const latestAuction = auctionComparisons[0] || null;
+
+  const actions = [
+    performance.summary.discardCandidateCount
+      ? `Avaliar descarte de ${performance.summary.discardCandidateCount} lote(s) com baixa performance.`
+      : "Manter rotina de pesagem para separar lotes bons de lotes travados.",
+    expenses.some((expense) => expense.receiptDataUrl && !expense.ocr)
+      ? "Rodar OCR nas notinhas já anexadas para reduzir digitação manual e erro de classificação."
+      : "Continuar anexando comprovantes nas despesas para preservar auditoria.",
+    !db.marketMonthlyCloses?.length
+      ? "Recalcular fechamentos mensais de mercado para melhorar leitura de ciclo."
+      : "Usar fechamento mensal e CDI como régua obrigatória das decisões.",
+    !process.env.DATABASE_URL
+      ? "Preparar migração para Postgres antes de uso multiusuário ou produção."
+      : "DATABASE_URL configurada; próximo passo é ativar persistência relacional."
+  ];
+
+  return {
+    generatedAt: new Date().toISOString(),
+    kpis: {
+      lotCount: lots.length,
+      totalHeads,
+      totalStockArrobas,
+      marketPrice,
+      stockValue,
+      acquisitionValue,
+      expenseTotal,
+      unrealizedResult: stockValue - acquisitionValue - expenseTotal,
+      simulationCount: simulations.length,
+      auctionComparisonCount: auctionComparisons.length,
+      loanScenarioCount: loanScenarios.length
+    },
+    decisionRadar: {
+      marketRisk: insights.summary,
+      bestLot,
+      worstLot,
+      latestSimulation: latestSimulation ? {
+        id: latestSimulation.id,
+        lotName: latestSimulation.lotName,
+        recommendation: latestSimulation.recommendation,
+        profitTotal: latestSimulation.profitTotal,
+        roi: latestSimulation.roi,
+        operationVsCdiAmount: latestSimulation.operationVsCdiAmount
+      } : null,
+      latestAuction: latestAuction ? {
+        id: latestAuction.id,
+        winner: latestAuction.winner,
+        lotA: latestAuction.lotA?.lotName,
+        lotB: latestAuction.lotB?.lotName
+      } : null,
+      latestLoan: latestLoan ? {
+        id: latestLoan.id,
+        recommendation: latestLoan.recommendation,
+        profitAfterDebtCost: latestLoan.profitAfterDebtCost,
+        profitAfterDebtVsCdi: latestLoan.profitAfterDebtVsCdi
+      } : null
+    },
+    actions,
+    reportSources: {
+      performance,
+      insights
+    }
+  };
+}
+
+function dbReadinessReport(db) {
+  const internalCollections = new Set(["authSessions", "authCodes"]);
+  const collections = Object.keys(defaultDb).filter((key) => Array.isArray(defaultDb[key]) && !internalCollections.has(key));
+  const collectionStats = collections.map((name) => ({
+    name,
+    records: Array.isArray(db[name]) ? db[name].length : 0,
+    suggestedTable: name.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
+  }));
+  const jsonBytes = Buffer.byteLength(JSON.stringify(db), "utf8");
+  const blockers = [];
+  const setupItems = [];
+  if (!process.env.DATABASE_URL) setupItems.push("Configurar DATABASE_URL quando for publicar com Postgres.");
+  if ((db.expenses || []).some((expense) => expense.receiptDataUrl?.length > 250000)) blockers.push("Há comprovantes grandes em base64; em Postgres real, mover para storage e guardar URL.");
+  if ((db.animalWeighings || []).some((item) => item.photoDataUrls?.length)) blockers.push("Fotos/vídeos de pesagem devem ir para storage antes de produção.");
+  const readiness = blockers.length ? "needs_storage_cleanup" : process.env.DATABASE_URL ? "ready_for_first_migration" : "local_mode";
+  return {
+    generatedAt: new Date().toISOString(),
+    currentStore: {
+      type: "json_file",
+      path: "data/db.json",
+      approximateBytes: jsonBytes
+    },
+    targetStore: {
+      type: "postgres",
+      env: "DATABASE_URL",
+      dependencyInstalled: true
+    },
+    collections: collectionStats,
+    readiness,
+    readinessLabel: blockers.length ? "Ajuste de mídia pendente" : process.env.DATABASE_URL ? "Pronto para migrar" : "Modo local ativo",
+    readinessDetail: blockers.length
+      ? "Antes de publicar com Postgres, mova mídias grandes para storage."
+      : process.env.DATABASE_URL
+        ? "A base local não tem bloqueios críticos para a primeira migração."
+        : "O app está operando normalmente com data/db.json. Configure Postgres apenas quando for publicar em produção.",
+    blockers,
+    setupItems,
+    suggestedOrder: ["users", "lots", "animals", "expenses", "weighings", "market", "simulations", "auctionComparisons", "loanScenarios", "receiptAnalyses"],
+    nextSteps: [
+      "Criar schema relacional a partir de db/schema.sql.",
+      "Migrar dados do JSON com script idempotente.",
+      "Mover imagens/base64 para storage antes de volume real.",
+      "Manter backup JSON enquanto a migração não estiver validada em produção."
+    ]
+  };
+}
+
+function receiptFallbackAnalysis(payload) {
+  const fileName = String(payload.receiptName || payload.fileName || "").toLowerCase();
+  const notes = String(payload.notes || payload.description || "").toLowerCase();
+  const text = `${fileName} ${notes}`;
+  let suggestedCategoryId = "outros";
+  if (/frete|carreto|transporte|gta/.test(text)) suggestedCategoryId = "fretes";
+  else if (/sal|mineral|suplement|fortis|comigo|ração|racao/.test(text)) suggestedCategoryId = "suplementacao";
+  else if (/vacina|verm[ií]fugo|medic|veterin/.test(text)) suggestedCategoryId = "medicamentos";
+  else if (/diesel|combust/.test(text)) suggestedCategoryId = "combustivel";
+  else if (/cerca|arame|mour[aã]o/.test(text)) suggestedCategoryId = "manutencao_cercas";
+  const amountMatch = text.match(/(?:r\$|\$)?\s*(\d{1,3}(?:[.\s]\d{3})*(?:,\d{2})|\d+(?:\.\d{2})?)/);
+  return {
+    provider: "fallback_local",
+    confidence: "baixa",
+    vendorName: "",
+    documentDate: "",
+    totalAmount: amountMatch ? numericInput(amountMatch[1], 0) : 0,
+    suggestedCategoryId,
+    description: payload.description || fileName || "Comprovante anexado",
+    warnings: [
+      "Fallback local não lê texto da imagem; configure OPENAI_API_KEY para OCR visual.",
+      "Revise valor, data, fornecedor e categoria antes de gravar a despesa."
+    ]
+  };
+}
+
+async function analyzeReceipt(payload, db) {
+  if (!payload.receiptDataUrl && !payload.imageDataUrl) {
+    const error = new Error("Envie uma imagem de comprovante para analisar.");
+    error.status = 400;
+    throw error;
+  }
+  if (!process.env.OPENAI_API_KEY) return receiptFallbackAnalysis(payload);
+  const visualItems = visualEvidenceItems({ imageDataUrl: payload.receiptDataUrl || payload.imageDataUrl });
+  const prompt = [
+    "Leia este comprovante ou notinha rural e retorne apenas JSON.",
+    "Extraia fornecedor, data, valor total, itens principais e categoria de despesa sugerida.",
+    `Categorias válidas: ${(db.expenseCategories || []).map((item) => item.id).join(", ")}.`,
+    "Formato: {\"provider\":\"openai\",\"confidence\":\"baixa|media|alta\",\"vendorName\":\"\",\"documentDate\":\"YYYY-MM-DD ou vazio\",\"totalAmount\":0,\"suggestedCategoryId\":\"outros\",\"description\":\"\",\"lineItems\":[{\"name\":\"\",\"amount\":0}],\"warnings\":[]}"
+  ].join("\n");
+  let result;
+  try {
+    result = await callOpenAiVisionJson(prompt, visualItems);
+  } catch (error) {
+    const fallback = receiptFallbackAnalysis(payload);
+    fallback.provider = "fallback_after_openai_error";
+    fallback.warnings = [
+      `IA visual não conseguiu ler o comprovante: ${error.message}`,
+      ...fallback.warnings
+    ];
+    return fallback;
+  }
+  return {
+    provider: "openai",
+    confidence: result.confidence || "baixa",
+    vendorName: result.vendorName || "",
+    documentDate: result.documentDate || "",
+    totalAmount: Number(result.totalAmount || 0),
+    suggestedCategoryId: db.expenseCategories?.some((category) => category.id === result.suggestedCategoryId) ? result.suggestedCategoryId : "outros",
+    description: result.description || "",
+    lineItems: Array.isArray(result.lineItems) ? result.lineItems.slice(0, 20) : [],
+    warnings: Array.isArray(result.warnings) ? result.warnings : []
+  };
+}
+
+function deterministicDecisionBrief(db, lotId) {
+  const performance = lotPerformanceIntelligence(db);
+  const lot = performance.lots.find((item) => item.lotId === lotId) || performance.lots[0] || null;
+  const insights = intelligenceInsights(db);
+  if (!lot) {
+    return {
+      provider: "deterministic",
+      title: "Sem lote para avaliar",
+      recommendation: "Cadastre ou selecione um lote.",
+      reasons: ["A base ainda não tem lotes com métricas suficientes."],
+      nextActions: ["Cadastrar lote", "Lançar peso atual", "Informar preço de compra"]
+    };
+  }
+  const nextActions = [
+    lot.recommendation.action.includes("descarte") ? "Separar o lote para avaliação sanitária e simulação de venda imediata." : "Atualizar pesagem e simular venda na meta.",
+    lot.potentialMargin < 0.08 ? "Rever custos alocados e preço mínimo de venda." : "Comparar permanência contra CDI no prazo projetado.",
+    "Registrar nova simulação após atualizar arroba, GMD e custo diário."
+  ];
+  return {
+    provider: "deterministic",
+    lotId: lot.lotId,
+    title: lot.lotName,
+    recommendation: lot.recommendation.label,
+    reasons: [
+      lot.recommendation.reason,
+      `Score ${Math.round(lot.score)} com margem potencial ${(lot.potentialMargin * 100).toFixed(1)}%.`,
+      `Risco de mercado ${insights.summary.marketRiskLevel} e CDI ${(Number(insights.summary.cdiAnnualRate || 0) * 100).toFixed(2)}% a.a.`
+    ],
+    nextActions,
+    metrics: lot
+  };
+}
+
+async function decisionBrief(db, payload) {
+  const base = deterministicDecisionBrief(db, payload.lotId);
+  if (!process.env.OPENAI_API_KEY || base.provider !== "deterministic" || !base.lotId) return base;
+  try {
+    const result = await callOpenAiTextJson(
+      "Você é um analista pecuário. Gere recomendação executiva em JSON com recommendation, reasons e nextActions. Seja objetivo e use os dados, sem inventar preço.",
+      base
+    );
+    return {
+      provider: "openai",
+      lotId: base.lotId,
+      title: base.title,
+      recommendation: result.recommendation || base.recommendation,
+      reasons: Array.isArray(result.reasons) ? result.reasons : base.reasons,
+      nextActions: Array.isArray(result.nextActions) ? result.nextActions : base.nextActions,
+      metrics: base.metrics
+    };
+  } catch (error) {
+    return { ...base, provider: "deterministic_fallback", aiError: error.message };
+  }
+}
+
 async function routeApi(req, res, url) {
   const db = await loadDb();
   const parts = url.pathname.split("/").filter(Boolean);
@@ -1742,6 +2218,9 @@ async function routeApi(req, res, url) {
   if (url.pathname === "/api/db") return send(res, 200, clientDb(db));
   if (url.pathname === "/api/risk/score") return send(res, 200, riskScore(db, Number(url.searchParams.get("horizonDays") || 120)));
   if (url.pathname === "/api/intelligence/insights") return send(res, 200, intelligenceInsights(db, Number(url.searchParams.get("horizonDays") || 120)));
+  if (url.pathname === "/api/intelligence/lots-performance") return send(res, 200, lotPerformanceIntelligence(db));
+  if (url.pathname === "/api/reports/executive") return send(res, 200, executiveReport(db));
+  if (url.pathname === "/api/admin/db-readiness") return send(res, 200, dbReadinessReport(db));
   if (url.pathname === "/api/market/cepea-latest" && req.method === "POST") {
     const quote = await fetchCepeaLatestQuote();
     const index = db.marketQuotes.findIndex((item) => item.id === quote.id);
@@ -1798,7 +2277,18 @@ async function routeApi(req, res, url) {
     return send(res, 200, record);
   }
   if (url.pathname === "/api/loans/simulate" && req.method === "POST") {
-    return send(res, 200, simulateLoan(await body(req), db));
+    const payload = await body(req);
+    const result = simulateLoan(payload, db);
+    const record = {
+      id: id("loan"),
+      createdAt: new Date().toISOString(),
+      input: payload,
+      ...result
+    };
+    db.loanScenarios.unshift(record);
+    db.loanScenarios = db.loanScenarios.slice(0, 100);
+    await saveDb(db);
+    return send(res, 200, record);
   }
   if (url.pathname === "/api/simulations/bulk-delete" && req.method === "POST") {
     const payload = await body(req);
@@ -1816,11 +2306,34 @@ async function routeApi(req, res, url) {
       received: payload
     });
   }
+  if (url.pathname === "/api/ai/decision-brief" && req.method === "POST") {
+    const payload = await body(req);
+    return send(res, 200, await decisionBrief(db, payload));
+  }
   if (url.pathname === "/api/ai/status") {
     return send(res, 200, {
       openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
       visionModel: visionModel()
     });
+  }
+  if (url.pathname === "/api/ocr/receipt" && req.method === "POST") {
+    try {
+      const payload = await body(req);
+      const result = await analyzeReceipt(payload, db);
+      const record = {
+        id: id("receipt_ocr"),
+        createdAt: new Date().toISOString(),
+        receiptName: payload.receiptName || payload.fileName || "",
+        expenseId: payload.expenseId || "",
+        result
+      };
+      db.receiptAnalyses.unshift(record);
+      db.receiptAnalyses = db.receiptAnalyses.slice(0, 200);
+      await saveDb(db);
+      return send(res, 200, { ...result, analysisId: record.id });
+    } catch (error) {
+      return send(res, error.status || 500, { error: "receipt_ocr_failed", detail: error.message });
+    }
   }
   if (url.pathname === "/api/ai/weight-from-photo" && req.method === "POST") {
     try {
@@ -1857,6 +2370,10 @@ async function routeApi(req, res, url) {
       return send(res, 409, { error: "duplicate_record", detail: "Cadastro duplicado com os mesmos dados." });
     }
     if (entity === "expenses") normalizeExpense(record);
+    if (entity === "expenses") {
+      const validationError = validateExpenseRecord(record, db);
+      if (validationError) return send(res, 400, { error: "invalid_expense", detail: validationError });
+    }
     if (entity === "animalWeighings") {
       const animal = db.animals.find((item) => item.id === record.animalId);
       if (!animal) return send(res, 404, { error: "animal_not_found", detail: "Animal não encontrado para registrar pesagem." });
@@ -1887,6 +2404,10 @@ async function routeApi(req, res, url) {
       return send(res, 409, { error: "duplicate_record", detail: "Cadastro duplicado com os mesmos dados." });
     }
     if (entity === "expenses") normalizeExpense(updated);
+    if (entity === "expenses") {
+      const validationError = validateExpenseRecord(updated, db);
+      if (validationError) return send(res, 400, { error: "invalid_expense", detail: validationError });
+    }
     if (entity === "animalWeighings") {
       const animal = db.animals.find((item) => item.id === updated.animalId);
       if (!animal) return send(res, 404, { error: "animal_not_found", detail: "Animal não encontrado para atualizar pesagem." });

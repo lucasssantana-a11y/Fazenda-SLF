@@ -32,13 +32,30 @@ const viewMeta = {
   market: ["Mercado", "Arroba e insumos"],
   auction: ["Leilão", "Comparação de pesagens e valores"],
   loans: ["Empréstimos", "Viabilidade de compra financiada"],
+  reports: ["Relatórios", "Visão executiva e infraestrutura"],
   simulate: ["Simular", "Viabilidade de compra e venda"],
-  ai: ["IA", "Hipóteses com GPT ou Gemini"]
+  ai: ["Inteligência", "Performance, risco e recomendações"]
 };
 
 let db = null;
 let editContext = null;
 let authToken = localStorage.getItem("slfAuthToken") || "";
+let sidebarCollapsed = localStorage.getItem("slfSidebarCollapsed") === "1";
+
+const entityLabels = {
+  lots: "Lote",
+  animals: "Animal",
+  animalWeighings: "Pesagem individual",
+  lotWeighings: "Pesagem do lote",
+  expenses: "Custo",
+  pastures: "Pasto",
+  pastureMovements: "Movimentação",
+  marketQuotes: "Cotação",
+  supplements: "Suplemento",
+  marketCostBenchmarks: "Benchmark",
+  loanScenarios: "Simulação de crédito",
+  receiptAnalyses: "Análise de notinha"
+};
 
 const editSchemas = {
   lots: [
@@ -153,6 +170,46 @@ function showApp() {
   document.querySelector("#authGate").hidden = true;
   document.querySelector("#appShell").hidden = false;
   document.querySelector("#loginMessage").textContent = "";
+  setSidebarCollapsed(sidebarCollapsed);
+}
+
+function showToast(title, message = "", type = "success") {
+  const stack = document.querySelector("#toastStack");
+  if (!stack) return;
+  const toast = document.createElement("article");
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div>
+      <strong>${escapeHtml(title)}</strong>
+      ${message ? `<p>${escapeHtml(message)}</p>` : ""}
+    </div>
+    <button type="button" aria-label="Fechar aviso">×</button>
+  `;
+  const close = () => toast.remove();
+  toast.querySelector("button").addEventListener("click", close);
+  stack.append(toast);
+  setTimeout(close, type === "error" ? 6500 : 4200);
+}
+
+function setSidebarCollapsed(collapsed) {
+  sidebarCollapsed = collapsed;
+  localStorage.setItem("slfSidebarCollapsed", collapsed ? "1" : "0");
+  const shell = document.querySelector("#appShell");
+  shell?.classList.toggle("nav-collapsed", collapsed);
+  const button = document.querySelector("#sidebarToggle");
+  if (button) {
+    button.setAttribute("aria-label", collapsed ? "Abrir menu" : "Recolher menu");
+    button.title = collapsed ? "Abrir menu" : "Recolher menu";
+  }
+}
+
+function setModuleTab(group, name) {
+  document.querySelectorAll(`[data-module-tab][data-module-group="${group}"]`).forEach((item) => {
+    item.classList.toggle("active", item.dataset.moduleTab === name);
+  });
+  document.querySelectorAll(`[data-module-pane][data-module-group="${group}"]`).forEach((item) => {
+    item.classList.toggle("active", item.dataset.modulePane === name);
+  });
 }
 
 function formData(form) {
@@ -173,6 +230,12 @@ async function fileAsDataUrl(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+function todayIso() {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return date.toISOString().slice(0, 10);
 }
 
 function waitForVideoEvent(video, eventName) {
@@ -516,6 +579,177 @@ function growthChart(lot) {
   `;
 }
 
+function daysSince(value) {
+  if (!value) return null;
+  const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return null;
+  return Math.max(0, Math.round((Date.now() - date.getTime()) / 86400000));
+}
+
+function lotDecisionMetrics(lot, price) {
+  const quantity = Number(lot.quantity || 0);
+  const purchaseArrobas = Number(lot.purchaseArrobas || lot.currentArrobas || 0);
+  const currentArrobas = Number(lot.currentArrobas || purchaseArrobas || 0);
+  const allocatedCostTotal = allocatedExpensesForLot(lot);
+  const allocatedCostPerHead = quantity ? allocatedCostTotal / quantity : 0;
+  const investedPerHead = Number(lot.purchasePricePerHead || 0) + allocatedCostPerHead;
+  const valuePerHead = currentArrobas * price;
+  const resultPerHead = valuePerHead - investedPerHead;
+  const margin = valuePerHead ? resultPerHead / valuePerHead : 0;
+  const costPerArroba = currentArrobas ? investedPerHead / currentArrobas : 0;
+  const producedArrobas = Math.max(0, currentArrobas - purchaseArrobas);
+  const days = daysSince(lot.entryDate);
+  const gmd = days && days > 0 ? (producedArrobas * 30) / days : 0;
+  let action = "Monitorar";
+  let tone = "neutral";
+  let reason = "Sem sinal extremo; atualizar pesagem e custo mantém a leitura confiável.";
+  if (resultPerHead < -150 && gmd < 0.25) {
+    action = "Avaliar descarte";
+    tone = "danger";
+    reason = "Resultado negativo e GMD baixo indicam capital preso.";
+  } else if (margin < 0 || costPerArroba > price * 0.94) {
+    action = "Atenção";
+    tone = "warn";
+    reason = "Custo por arroba está apertado contra o preço de referência.";
+  } else if (gmd >= 0.45 && margin >= 0.12) {
+    action = "Manter ganho";
+    tone = "ok";
+    reason = "Margem e ganho estimado favorecem segurar no curto prazo.";
+  } else if (resultPerHead > 0 && currentArrobas >= 10) {
+    action = "Simular venda";
+    tone = "ok";
+    reason = "Lote já tem resultado positivo e peso relevante para decisão.";
+  }
+  const score = Math.max(0, Math.min(100, Math.round(50 + margin * 100 + gmd * 35 - Math.max(0, (costPerArroba / Math.max(price, 1) - 0.85) * 80))));
+  return {
+    quantity,
+    purchaseArrobas,
+    currentArrobas,
+    stockArrobas: quantity * currentArrobas,
+    allocatedCostTotal,
+    allocatedCostPerHead,
+    investedPerHead,
+    valuePerHead,
+    resultPerHead,
+    margin,
+    costPerArroba,
+    producedArrobas,
+    days,
+    gmd,
+    action,
+    tone,
+    reason,
+    score
+  };
+}
+
+function lotDecisionCard(lot, price) {
+  const metrics = lotDecisionMetrics(lot, price);
+  const scoreWidth = Math.max(4, Math.min(100, metrics.score));
+  return `
+    <article class="lot-radar-card ${metrics.tone}">
+      <div class="lot-radar-head">
+        <div>
+          <span>Lote ${lot.code || ""}</span>
+          <strong>${escapeHtml(lot.name || lot.id)}</strong>
+        </div>
+        <em>${metrics.action}</em>
+      </div>
+      <div class="score-line"><i style="width:${scoreWidth}%"></i></div>
+      <div class="lot-radar-metrics">
+        <div><span>Resultado/cab</span><strong>${currency.format(metrics.resultPerHead)}</strong></div>
+        <div><span>Margem</span><strong>${percent.format(metrics.margin || 0)}</strong></div>
+        <div><span>Custo/@</span><strong>${currency.format(metrics.costPerArroba || 0)}</strong></div>
+        <div><span>GMD est.</span><strong>${number.format(metrics.gmd || 0)} kg/d</strong></div>
+      </div>
+      <p>${escapeHtml(metrics.reason)}</p>
+      <div class="lot-radar-actions">
+        <button class="mini-button" type="button" data-action="simulateLot" data-id="${lot.id}">Simular</button>
+        <button class="mini-button light" type="button" data-action="gotoView" data-id="ai">Ranking</button>
+      </div>
+    </article>
+  `;
+}
+
+function lotDecisionSummary(lots, price) {
+  const metrics = lots.map((lot) => ({ lot, metrics: lotDecisionMetrics(lot, price) }));
+  const danger = metrics.filter((item) => item.metrics.tone === "danger").length;
+  const warn = metrics.filter((item) => item.metrics.tone === "warn").length;
+  const best = [...metrics].sort((a, b) => b.metrics.score - a.metrics.score)[0];
+  const worst = [...metrics].sort((a, b) => a.metrics.score - b.metrics.score)[0];
+  return { metrics, danger, warn, best, worst };
+}
+
+function overviewLotCard(lot, price) {
+  const metrics = lotDecisionMetrics(lot, price);
+  return `
+    <article class="overview-lot-card ${metrics.tone}">
+      <div>
+        <span>Lote ${lot.code || ""}</span>
+        <strong>${escapeHtml(lot.name || lot.id)}</strong>
+      </div>
+      <div class="overview-lot-numbers">
+        <span>${number.format(metrics.quantity)} cab</span>
+        <span>${number.format(metrics.currentArrobas)}@ atual</span>
+        <span>${currency.format(metrics.resultPerHead)}/cab</span>
+      </div>
+      <p>${escapeHtml(metrics.action)} · ${escapeHtml(metrics.reason)}</p>
+      <button class="mini-button light" type="button" data-action="simulateLot" data-id="${lot.id}">Simular</button>
+    </article>
+  `;
+}
+
+function renderOverviewLots(price) {
+  const rankedLots = db.lots
+    .map((lot) => ({ lot, metrics: lotDecisionMetrics(lot, price) }))
+    .sort((a, b) => {
+      const toneWeight = { danger: 0, warn: 1, neutral: 2, ok: 3 };
+      const toneDelta = (toneWeight[a.metrics.tone] ?? 2) - (toneWeight[b.metrics.tone] ?? 2);
+      return toneDelta || a.metrics.score - b.metrics.score;
+    })
+    .slice(0, 5);
+  document.querySelector("#overviewLots").innerHTML = rankedLots.length
+    ? `<div class="overview-list">${rankedLots.map((item) => overviewLotCard(item.lot, price)).join("")}</div>`
+    : '<p class="empty-state">Cadastre um lote para iniciar a leitura do rebanho.</p>';
+}
+
+function overviewExpenseItem(expense) {
+  const category = db.expenseCategories.find((item) => item.id === expense.expenseCategoryId);
+  const hasReceipt = Boolean(expense.receiptDataUrl);
+  return `
+    <article class="movement-item">
+      <div class="movement-date">
+        <strong>${formatDateBR(expense.date) || "--"}</strong>
+        <span>${category?.group || "Custo"}</span>
+      </div>
+      <div class="movement-main">
+        <strong>${escapeHtml(expense.description || category?.name || "Despesa")}</strong>
+        <span>${escapeHtml(expenseRateioLabel(expense))}</span>
+      </div>
+      <div class="movement-value">
+        <strong>${currency.format(Number(expense.amount || 0))}</strong>
+        ${hasReceipt ? `<button class="mini-button light" type="button" data-action="viewReceipt" data-id="${expense.id}">Nota</button>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+function renderOverviewExpenses() {
+  const expenses = [...(db.expenses || [])]
+    .sort((a, b) => String(b.date || b.createdAt || "").localeCompare(String(a.date || a.createdAt || "")))
+    .slice(0, 5);
+  const totalRecent = expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+  document.querySelector("#overviewExpenses").innerHTML = expenses.length
+    ? `
+      <div class="movement-summary">
+        <span>${number.format(expenses.length)} últimos lançamentos</span>
+        <strong>${currency.format(totalRecent)}</strong>
+      </div>
+      <div class="movement-list">${expenses.map(overviewExpenseItem).join("")}</div>
+    `
+    : '<p class="empty-state">Nenhum custo lançado ainda.</p>';
+}
+
 function renderExecutiveDashboard() {
   const selectedLotId = document.querySelector("#dashboardLotSelect").value;
   const lots = selectedLotId ? db.lots.filter((lot) => lot.id === selectedLotId) : db.lots;
@@ -530,46 +764,28 @@ function renderExecutiveDashboard() {
   const acquisitionArrobas = lots.reduce((sum, lot) => sum + Number(lot.quantity || 0) * Number(lot.purchaseArrobas || 0), 0);
   const producedArrobas = Math.max(0, totalArrobas - acquisitionArrobas);
   const unrealizedGain = stockValue - acquisitionValue - allocatedCosts;
+  const decisionSummary = lotDecisionSummary(lots, price);
   document.querySelector("#overviewKpis").innerHTML = [
     metric("Animais ativos", number.format(totalHeads)),
     metric("@ em estoque", `${number.format(totalArrobas)}@`),
-    metric("@ produzidas", `${number.format(producedArrobas)}@`),
-    metric("Peso médio", `${number.format(avgArrobas)}@`),
-    metric("Capital aquisição", currency.format(acquisitionValue)),
-    metric("Custos lançados", currency.format(allocatedCosts)),
-    metric("Capital para venda", currency.format(stockValue)),
     metric("Resultado potencial", currency.format(unrealizedGain)),
-    metric("@ do dia", currency.format(price))
+    metric("Lotes em atenção", number.format(decisionSummary.warn + decisionSummary.danger)),
+    metric("@ do dia", currency.format(price)),
+    metric("Peso médio", `${number.format(avgArrobas)}@`)
   ].join("");
   document.querySelector("#dashboardInsights").innerHTML = [
-    `<span><strong>Referência mercado:</strong> ${escapeHtml(quote?.region || "Manual")} ${quote?.date ? `| ${shortDate.format(new Date(`${quote.date}T00:00:00`))}` : ""}</span>`,
-    `<span><strong>Leitura:</strong> curvas em @/cab. com GMD conservador, base e acelerado.</span>`
+    `<span><strong>Mercado:</strong> ${escapeHtml(quote?.region || "Manual")} ${quote?.date ? `| ${shortDate.format(new Date(`${quote.date}T00:00:00`))}` : ""}</span>`,
+    `<span><strong>Melhor lote:</strong> ${escapeHtml(decisionSummary.best?.lot?.name || "sem lote")}</span>`,
+    `<span><strong>Prioridade:</strong> ${escapeHtml(decisionSummary.worst?.lot?.name || "sem lote")}</span>`,
+    `<span><strong>Base financeira:</strong> estoque ${currency.format(stockValue)} | custos ${currency.format(allocatedCosts)}</span>`
   ].join("");
-  document.querySelector("#growthCharts").innerHTML = lots.length ? lots.map(growthChart).join("") : "<p>Cadastre um lote para visualizar projeções.</p>";
+  document.querySelector("#growthCharts").innerHTML = lots.length ? lots.map((lot) => lotDecisionCard(lot, price)).join("") : "<p>Cadastre um lote para visualizar o radar.</p>";
 }
 
 function renderOverview() {
   renderExecutiveDashboard();
-  const lotRows = db.lots.map((lot) => editableRow("lots", lot.id, [
-    lot.code || "",
-    escapeHtml(lot.name),
-    number.format(Number(lot.quantity || 0)),
-    `${number.format(Number(lot.purchaseArrobas || 0))}@`,
-    `${number.format(Number(lot.currentArrobas || 0))}@`,
-    `${number.format(stockArrobasForLot(lot))}@`,
-    currency.format(stockArrobasForLot(lot) * latestArrobaPrice()),
-    actionButtons("lots", lot.id)
-  ]));
-  document.querySelector("#overviewLots").innerHTML = table("", ["ID", "Lote", "Qtd.", "@ aquisição", "@ atual", "@ estoque", "Valor estoque", "Ações"], lotRows);
-  const expenseRows = db.expenses.slice(0, 6).map((expense) => editableRow("expenses", expense.id, [
-    formatDateBR(expense.date),
-    escapeHtml(db.expenseCategories.find((category) => category.id === expense.expenseCategoryId)?.name || expense.expenseCategoryId || ""),
-    escapeHtml(expense.description || ""),
-    currency.format(Number(expense.amount || 0)),
-    expense.receiptDataUrl ? `<button class="mini-button" type="button" data-action="viewReceipt" data-id="${expense.id}">Nota</button>` : "",
-    actionButtons("expenses", expense.id)
-  ]));
-  document.querySelector("#overviewExpenses").innerHTML = table("", ["Data", "Categoria", "Descrição", "Valor", "Comprovante", "Ações"], expenseRows);
+  renderOverviewLots(latestArrobaPrice());
+  renderOverviewExpenses();
 }
 
 function analysisRows(title, rows) {
@@ -1012,6 +1228,23 @@ function renderLoanResult(result) {
   `;
 }
 
+function renderLoanHistory() {
+  const container = document.querySelector("#loanHistory");
+  if (!container) return;
+  const rows = (db.loanScenarios || []).slice(0, 20).map((record) => [
+    record.createdAt ? new Date(record.createdAt).toLocaleString("pt-BR") : "",
+    escapeHtml(record.operation?.lotName || record.input?.operation?.scenarioName || "Compra financiada"),
+    escapeHtml(record.recommendation || ""),
+    currency.format(record.principal || 0),
+    currency.format(record.regularPayment || 0),
+    currency.format(record.totalFinancialCost || 0),
+    currency.format(record.profitAfterDebtCost || 0),
+    currency.format(record.profitAfterDebtVsCdi || 0),
+    `<button class="mini-button danger" type="button" data-action="delete" data-entity="loanScenarios" data-id="${record.id}">Excluir</button>`
+  ]);
+  container.innerHTML = table("", ["Data", "Cenário", "Decisão", "Principal", "Parcela", "Custo fin.", "Lucro após dívida", "Vs CDI", "Ações"], rows);
+}
+
 async function simulateLoan(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -1030,6 +1263,101 @@ async function simulateLoan(event) {
   document.querySelector("#loanDecision").textContent = "Calculando...";
   const result = await api("/api/loans/simulate", { method: "POST", body: JSON.stringify(payload) });
   renderLoanResult(result);
+  await refresh();
+  renderLoanResult(result);
+}
+
+function reportMetric(label, value, tone = "") {
+  return `<article class="report-kpi ${tone}"><span>${label}</span><strong>${value}</strong></article>`;
+}
+
+function renderExecutiveReportPayload(payload) {
+  const container = document.querySelector("#executiveReport");
+  if (!container) return;
+  const k = payload.kpis || {};
+  const radar = payload.decisionRadar || {};
+  const actions = payload.actions || [];
+  container.innerHTML = `
+    <div class="report-kpis">
+      ${reportMetric("Lotes", number.format(k.lotCount || 0))}
+      ${reportMetric("Animais", number.format(k.totalHeads || 0))}
+      ${reportMetric("@ estoque", `${number.format(k.totalStockArrobas || 0)}@`)}
+      ${reportMetric("Valor estoque", currency.format(k.stockValue || 0), "gain")}
+      ${reportMetric("Compra histórica", currency.format(k.acquisitionValue || 0))}
+      ${reportMetric("Custos lançados", currency.format(k.expenseTotal || 0))}
+      ${reportMetric("Resultado potencial", currency.format(k.unrealizedResult || 0), k.unrealizedResult >= 0 ? "gain" : "danger")}
+      ${reportMetric("Simulações", number.format(k.simulationCount || 0))}
+      ${reportMetric("Leilões", number.format(k.auctionComparisonCount || 0))}
+      ${reportMetric("Crédito", number.format(k.loanScenarioCount || 0))}
+    </div>
+    <div class="recommendation-grid">
+      <article class="recommendation-card ok">
+        <span>Melhor lote</span>
+        <strong>${escapeHtml(radar.bestLot?.lotName || "Sem dados")}</strong>
+        <p>${escapeHtml(radar.bestLot?.recommendation?.reason || "Cadastre e pese lotes para gerar destaque.")}</p>
+      </article>
+      <article class="recommendation-card warn">
+        <span>Ponto de atenção</span>
+        <strong>${escapeHtml(radar.worstLot?.lotName || "Sem dados")}</strong>
+        <p>${escapeHtml(radar.worstLot?.recommendation?.reason || "Sem lote crítico identificado.")}</p>
+      </article>
+      <article class="recommendation-card">
+        <span>Mercado</span>
+        <strong>Risco ${escapeHtml(radar.marketRisk?.marketRiskLevel || "n/a")}</strong>
+        <p>CDI ${percent.format(radar.marketRisk?.cdiAnnualRate || 0)} a.a. | Arroba ${currency.format(radar.marketRisk?.latestArrobaPrice || k.marketPrice || 0)}</p>
+      </article>
+      <article class="recommendation-card ${radar.latestLoan?.profitAfterDebtCost >= 0 ? "ok" : "warn"}">
+        <span>Último crédito</span>
+        <strong>${escapeHtml(radar.latestLoan?.recommendation || "Sem simulação")}</strong>
+        <p>${radar.latestLoan ? `Lucro após dívida ${currency.format(radar.latestLoan.profitAfterDebtCost || 0)} | Vs CDI ${currency.format(radar.latestLoan.profitAfterDebtVsCdi || 0)}` : "Rode uma simulação no módulo Crédito."}</p>
+      </article>
+    </div>
+    ${table("Ações recomendadas", ["Prioridade"], actions.map((item) => [escapeHtml(item)]))}
+  `;
+}
+
+function renderDbReadinessPayload(payload) {
+  const container = document.querySelector("#dbReadiness");
+  if (!container) return;
+  const blockers = payload.blockers || [];
+  const setupItems = payload.setupItems || [];
+  const readinessLabel = payload.readinessLabel || (blockers.length ? "Configuração pendente" : "Pronto para migrar");
+  const readinessDetail = payload.readinessDetail || (blockers.length ? "Resolva os itens abaixo antes da produção." : "Sem bloqueios críticos detectados.");
+  const statusTone = blockers.length ? "signal warn" : "signal";
+  const rows = (payload.collections || []).map((item) => [
+    escapeHtml(item.name),
+    number.format(item.records || 0),
+    escapeHtml(item.suggestedTable || "")
+  ]);
+  container.innerHTML = `
+    <div class="auction-summary">
+      ${auctionMetric("Armazenamento atual", payload.currentStore?.type || "json_file")}
+      ${auctionMetric("Tamanho aproximado", `${number.format((payload.currentStore?.approximateBytes || 0) / 1024)} KB`)}
+      ${auctionMetric("Destino", payload.targetStore?.type || "postgres")}
+      ${auctionMetric("Status", readinessLabel, statusTone)}
+    </div>
+    <p class="empty-state readiness-note">${escapeHtml(readinessDetail)}</p>
+    ${blockers.length ? table("Ajustes antes da produção", ["Item"], blockers.map((item) => [escapeHtml(item)])) : ""}
+    ${setupItems.length ? table("Para ativar Postgres", ["Próximo passo"], setupItems.map((item) => [escapeHtml(item)])) : '<p class="empty-state">Postgres já configurado para a próxima migração.</p>'}
+    ${table("Coleções e tabelas sugeridas", ["Coleção", "Registros", "Tabela"], rows)}
+  `;
+}
+
+async function renderExecutiveReport() {
+  const report = document.querySelector("#executiveReport");
+  const readiness = document.querySelector("#dbReadiness");
+  if (!report || !readiness) return;
+  try {
+    const [executive, dbPlan] = await Promise.all([
+      api("/api/reports/executive"),
+      api("/api/admin/db-readiness")
+    ]);
+    renderExecutiveReportPayload(executive);
+    renderDbReadinessPayload(dbPlan);
+  } catch (error) {
+    report.innerHTML = `<article class="recommendation-card danger"><span>Relatório</span><strong>${escapeHtml(error.message)}</strong></article>`;
+    readiness.innerHTML = "";
+  }
 }
 
 function renderSelectedLotContext(lot) {
@@ -1106,9 +1434,9 @@ function renderHerd() {
     weighing.photoDataUrl ? `<button class="mini-button" type="button" data-action="viewLotWeighingPhoto" data-id="${weighing.id}">Foto</button>` : "",
     actionButtons("lotWeighings", weighing.id)
   ]));
-  document.querySelector("#herdTables").innerHTML = [
-    table("Lotes ativos", ["ID", "Lote", "Qtd.", "Entrada", "@ aquisição", "@ atual", "Compra/cab", "Categoria", "Ações"], lotRows),
-    table("Animais individuais", ["ID", "Animal", "Lote", "@ atual", "Entrada", "Ações"], animalRows),
+  document.querySelector("#lotsTable").innerHTML = table("", ["ID", "Lote", "Qtd.", "Entrada", "@ aquisição", "@ atual", "Compra/cab", "Categoria", "Ações"], lotRows);
+  document.querySelector("#animalsTable").innerHTML = table("", ["ID", "Animal", "Lote", "@ atual", "Entrada", "Ações"], animalRows);
+  document.querySelector("#weighingTables").innerHTML = [
     table("Pesagens individuais por brinco", ["Data", "Brinco", "Peso", "@ viva", "Origem", "Foto", "Ações"], weighingRows),
     table("Pesagens por lote", ["Data", "Lote", "Qtd.", "Peso médio", "@ média viva", "@ total viva", "Origem", "Foto", "Ações"], lotWeighingRows)
   ].join("");
@@ -1147,6 +1475,12 @@ function renderCosts() {
 
 function expenseCategoryName(categoryId) {
   return db.expenseCategories.find((category) => category.id === categoryId)?.name || categoryId || "Sem categoria";
+}
+
+function expenseCategoryLabel(categoryId) {
+  const category = db.expenseCategories.find((item) => item.id === categoryId);
+  if (!category) return categoryId || "Sem categoria";
+  return `${category.group} - ${category.name}`;
 }
 
 function expenseRateioLabel(expense) {
@@ -1229,7 +1563,7 @@ function costAppropriationForLot(lot) {
   for (const expense of db.expenses || []) {
     const allocated = allocatedExpenseForLot(lot, expense);
     if (!allocated) continue;
-    const category = expenseCategoryName(expense.expenseCategoryId);
+    const category = expenseCategoryLabel(expense.expenseCategoryId);
     categoryTotals.set(category, (categoryTotals.get(category) || 0) + allocated);
   }
 
@@ -1249,8 +1583,62 @@ function costAppropriationForLot(lot) {
   };
 }
 
+function costCategoryBars(categoryTotals, baseTotal) {
+  const rows = [...categoryTotals.entries()].sort((a, b) => b[1] - a[1]);
+  if (!rows.length) return '<p class="empty-state">Nenhuma despesa apropriada para este recorte.</p>';
+  return `
+    <div class="category-breakdown">
+      ${rows.map(([category, amount]) => {
+        const share = baseTotal ? amount / baseTotal : 0;
+        return `
+          <div class="category-breakdown-row">
+            <div>
+              <strong>${escapeHtml(category)}</strong>
+              <span>${currency.format(amount)} | ${percent.format(share)}</span>
+            </div>
+            <i><b style="width:${Math.max(3, Math.min(100, share * 100)).toFixed(1)}%"></b></i>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function costLotAppropriationCard(report, index) {
+  const expenseShare = report.totalCost ? report.expenseTotal / report.totalCost : 0;
+  return `
+    <details class="cost-lot-card" ${index < 2 ? "open" : ""}>
+      <summary>
+        <div>
+          <span>Lote ${report.lot.code || ""}</span>
+          <strong>${escapeHtml(report.lot.name || report.lot.id)}</strong>
+        </div>
+        <em>${currency.format(report.totalCost)}</em>
+      </summary>
+      <div class="cost-lot-metrics">
+        ${metric("Animais", number.format(report.quantity))}
+        ${metric("Compra", currency.format(report.purchaseTotal))}
+        ${metric("Despesas", currency.format(report.expenseTotal))}
+        ${metric("Despesa/cab", currency.format(report.expensePerHead))}
+        ${metric("Custo/cab", currency.format(report.costPerHead))}
+        ${metric("Custo/@ atual", currency.format(report.costPerCurrentArroba))}
+      </div>
+      <div class="cost-lot-split">
+        <div class="cost-stack">
+          <span>Composição do custo</span>
+          <i><b style="width:${Math.max(0, Math.min(100, (1 - expenseShare) * 100)).toFixed(1)}%"></b><b class="expense" style="width:${Math.max(0, Math.min(100, expenseShare * 100)).toFixed(1)}%"></b></i>
+          <div><strong>Compra ${percent.format(1 - expenseShare)}</strong><strong>Despesas ${percent.format(expenseShare)}</strong></div>
+        </div>
+        ${costCategoryBars(report.categoryTotals, report.expenseTotal)}
+      </div>
+    </details>
+  `;
+}
+
 function renderCostAppropriationReport() {
-  const reports = (db.lots || []).map(costAppropriationForLot);
+  const reports = (db.lots || [])
+    .map(costAppropriationForLot)
+    .sort((a, b) => b.totalCost - a.totalCost);
   const totalPurchase = reports.reduce((sum, item) => sum + item.purchaseTotal, 0);
   const totalExpenses = reports.reduce((sum, item) => sum + item.expenseTotal, 0);
   const totalCost = reports.reduce((sum, item) => sum + item.totalCost, 0);
@@ -1267,37 +1655,29 @@ function renderCostAppropriationReport() {
     }
   }
 
-  const lotRows = reports.map((report) => [
-    report.lot.code || "",
-    escapeHtml(report.lot.name),
-    number.format(report.quantity),
-    currency.format(report.purchaseTotal),
-    currency.format(report.expenseTotal),
-    currency.format(report.totalCost),
-    currency.format(report.costPerHead),
-    currency.format(report.expensePerHead),
-    currency.format(report.costPerCurrentArroba),
-    currency.format(report.costPerPurchaseArroba)
-  ]);
-  const categoryRows = [...categoryTotals.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([category, amount]) => [
-      escapeHtml(category),
-      currency.format(amount),
-      totalExpenses ? percent.format(amount / totalExpenses) : "0%"
-    ]);
-
   document.querySelector("#costAppropriationReport").innerHTML = `
-    <div class="cost-report-summary">
-      ${metric("Capital de compra", currency.format(totalPurchase))}
-      ${metric("Despesas apropriadas", currency.format(totalExpenses))}
-      ${metric("Custo total", currency.format(totalCost))}
-      ${metric("Custo médio/cab", currency.format(totalHeads ? totalCost / totalHeads : 0))}
-      ${metric("Custo médio/@ atual", currency.format(totalStockArrobas ? totalCost / totalStockArrobas : 0))}
-      ${metric("Lote mais caro/cab", highestCostLot ? `${escapeHtml(highestCostLot.lot.name)} | ${currency.format(highestCostLot.costPerHead)}` : "Sem lotes")}
+    <div class="cost-appropriation-screen">
+      <div class="cost-report-summary">
+        ${metric("Capital de compra", currency.format(totalPurchase))}
+        ${metric("Despesas apropriadas", currency.format(totalExpenses))}
+        ${metric("Custo total", currency.format(totalCost))}
+        ${metric("Custo médio/cab", currency.format(totalHeads ? totalCost / totalHeads : 0))}
+        ${metric("Custo médio/@ atual", currency.format(totalStockArrobas ? totalCost / totalStockArrobas : 0))}
+        ${metric("Lote mais caro/cab", highestCostLot ? `${escapeHtml(highestCostLot.lot.name)} | ${currency.format(highestCostLot.costPerHead)}` : "Sem lotes")}
+      </div>
+      <section class="cost-breakdown-panel">
+        <div class="section-head">
+          <div><h3>Despesas por categoria</h3><span>Rateio consolidado sobre os lotes ativos nas datas das despesas</span></div>
+        </div>
+        ${costCategoryBars(categoryTotals, totalExpenses)}
+      </section>
+      <section class="cost-lot-list">
+        <div class="section-head">
+          <div><h3>Lotes apropriados</h3><span>Abra um lote para ver composição, despesa por cabeça e categorias</span></div>
+        </div>
+        ${reports.length ? reports.map(costLotAppropriationCard).join("") : '<p class="empty-state">Cadastre lotes para visualizar a apropriação.</p>'}
+      </section>
     </div>
-    ${table("", ["ID", "Lote", "Qtd.", "Compra", "Despesas", "Custo total", "Custo/cab", "Despesa/cab", "Custo/@ atual", "Custo/@ aquisição"], lotRows)}
-    ${table("Quebra das despesas apropriadas por categoria", ["Categoria", "Valor apropriado", "% das despesas"], categoryRows)}
   `;
 }
 
@@ -1599,6 +1979,158 @@ async function renderAiInsights() {
   }
 }
 
+async function generateDecisionBrief(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const container = document.querySelector("#decisionBriefResult");
+  container.innerHTML = '<article class="recommendation-card"><span>Brief</span><strong>Gerando análise...</strong></article>';
+  try {
+    const payload = await api("/api/ai/decision-brief", {
+      method: "POST",
+      body: JSON.stringify({ lotId: form.lotId.value })
+    });
+    container.innerHTML = `
+      <article class="recommendation-card ${payload.provider === "openai" ? "ok" : "warn"}">
+        <span>${escapeHtml(payload.provider || "deterministic")}</span>
+        <strong>${escapeHtml(payload.title || "Brief de decisão")}</strong>
+        <p>${escapeHtml(payload.recommendation || "")}</p>
+      </article>
+      ${table("Razões", ["Leitura"], (payload.reasons || []).map((item) => [escapeHtml(item)]))}
+      ${table("Próximas ações", ["Ação"], (payload.nextActions || []).map((item) => [escapeHtml(item)]))}
+    `;
+  } catch (error) {
+    container.innerHTML = `<article class="recommendation-card danger"><span>Brief</span><strong>${escapeHtml(error.message)}</strong></article>`;
+  }
+}
+
+async function analyzeReceiptOcr() {
+  const form = document.querySelector("#expenseForm");
+  const box = document.querySelector("#receiptOcrResult");
+  const file = form.receipt.files?.[0];
+  if (!file) {
+    showToast("Foto necessária", "Anexe a foto da notinha antes de rodar o OCR.", "warn");
+    return;
+  }
+  const button = document.querySelector("#analyzeReceiptBtn");
+  button.disabled = true;
+  button.textContent = "Lendo notinha...";
+  box.innerHTML = '<div class="metric"><span>OCR</span><strong>Analisando comprovante...</strong></div>';
+  try {
+    const receiptDataUrl = await fileAsDataUrl(file);
+    const result = await api("/api/ocr/receipt", {
+      method: "POST",
+      body: JSON.stringify({
+        receiptName: file.name,
+        receiptDataUrl,
+        description: form.description.value
+      })
+    });
+    if (result.totalAmount > 0 && !parseNumericInput(form.amount.value)) form.amount.value = result.totalAmount.toFixed(2);
+    if (result.documentDate && !form.date.value) form.date.value = result.documentDate;
+    if (result.suggestedCategoryId) form.expenseCategoryId.value = result.suggestedCategoryId;
+    if (result.description && !form.description.value) form.description.value = result.description;
+    box.innerHTML = [
+      metric("OCR", result.provider === "openai" ? "IA visual" : "Fallback local"),
+      metric("Confiança", result.confidence || "baixa"),
+      metric("Fornecedor", escapeHtml(result.vendorName || "não identificado")),
+      metric("Valor sugerido", currency.format(result.totalAmount || 0)),
+      metric("Categoria", escapeHtml(result.suggestedCategoryId || "outros")),
+      ...(result.warnings || []).map((warning) => `<div class="metric signal warn"><span>Aviso</span><strong>${escapeHtml(warning)}</strong></div>`)
+    ].join("");
+  } catch (error) {
+    box.innerHTML = `<div class="metric signal danger"><span>OCR</span><strong>Falha</strong><p>${escapeHtml(error.message)}</p></div>`;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Ler notinha por IA/OCR";
+  }
+}
+
+function recommendationToneClass(severity) {
+  if (severity === "crítico") return "danger";
+  if (severity === "atenção") return "warn";
+  if (severity === "ok") return "ok";
+  return "";
+}
+
+function performanceActionButton(lotId) {
+  return `<button class="mini-button" type="button" data-action="simulateLot" data-id="${lotId}">Simular</button>`;
+}
+
+function renderRecommendationCards(payload) {
+  const discardCards = (payload.discardCandidates || []).map((lot) => `
+    <article class="recommendation-card danger">
+      <span>${escapeHtml(lot.recommendation.label)}</span>
+      <strong>${escapeHtml(lot.lotName)}</strong>
+      <p>${escapeHtml(lot.recommendation.reason)}</p>
+      <div>
+        <em>Score ${number.format(lot.score)}</em>
+        <em>GMD ${number.format(lot.estimatedGmdKgDay)} kg/d</em>
+        <em>${currency.format(lot.potentialResultPerHead)}/cab</em>
+      </div>
+    </article>
+  `);
+  const bestCards = (payload.bestLots || []).map((lot) => `
+    <article class="recommendation-card ok">
+      <span>Melhor performance</span>
+      <strong>${escapeHtml(lot.lotName)}</strong>
+      <p>${escapeHtml(lot.recommendation.reason)}</p>
+      <div>
+        <em>Score ${number.format(lot.score)}</em>
+        <em>Margem ${percent.format(lot.potentialMargin || 0)}</em>
+        <em>${number.format(lot.currentArrobas || 0)}@</em>
+      </div>
+    </article>
+  `);
+  if (!discardCards.length && !bestCards.length) {
+    return '<article class="recommendation-card"><span>Inteligência</span><strong>Sem lotes suficientes</strong><p>Cadastre lotes, datas de entrada e pesos para gerar ranking.</p></article>';
+  }
+  return [...discardCards, ...bestCards].join("");
+}
+
+async function renderLotIntelligence() {
+  const kpis = document.querySelector("#lotIntelligenceKpis");
+  const alerts = document.querySelector("#lotIntelligenceAlerts");
+  const ranking = document.querySelector("#lotPerformanceRanking");
+  if (!kpis || !alerts || !ranking) return;
+  try {
+    const payload = await api("/api/intelligence/lots-performance");
+    const summary = payload.summary || {};
+    const market = payload.marketReference || {};
+    kpis.innerHTML = [
+      metric("Lotes avaliados", number.format(summary.lotCount || 0)),
+      metric("Score médio", number.format(summary.averageScore || 0)),
+      metric("Candidatos descarte", number.format(summary.discardCandidateCount || 0)),
+      metric("Em observação", number.format(summary.observationCandidateCount || 0)),
+      metric("Resultado potencial", currency.format(summary.totalPotentialResult || 0)),
+      metric("@ em estoque", `${number.format(summary.totalStockArrobas || 0)}@`),
+      metric("@ referência", currency.format(market.arrobaPrice || 0))
+    ].join("");
+    alerts.innerHTML = renderRecommendationCards(payload);
+    const rows = (payload.lots || []).map((lot) => [
+      lot.code || "",
+      escapeHtml(lot.lotName || ""),
+      number.format(lot.score || 0),
+      `<span class="status-chip ${recommendationToneClass(lot.recommendation?.severity)}">${escapeHtml(lot.recommendation?.label || "")}</span>`,
+      number.format(lot.quantity || 0),
+      formatDateBR(lot.entryDate),
+      lot.daysInFarm === null ? "n/a" : `${number.format(lot.daysInFarm)} dias`,
+      `${number.format(lot.currentArrobas || 0)}@`,
+      `${number.format(lot.producedArrobasPerHead || 0)}@`,
+      `${number.format(lot.estimatedGmdKgDay || 0)} kg/d`,
+      currency.format(lot.allocatedCostPerHead || 0),
+      currency.format(lot.totalCostPerCurrentArroba || 0),
+      currency.format(lot.potentialResultPerHead || 0),
+      percent.format(lot.potentialMargin || 0),
+      performanceActionButton(lot.lotId)
+    ]);
+    ranking.innerHTML = table("Ranking de performance dos lotes", ["ID", "Lote", "Score", "Recomendação", "Qtd.", "Entrada", "Tempo", "@ atual", "@ produzida", "GMD", "Desp./cab", "Custo/@", "Resultado/cab", "Margem", "Ação"], rows);
+  } catch (error) {
+    kpis.innerHTML = "";
+    alerts.innerHTML = `<article class="recommendation-card danger"><span>Inteligência</span><strong>${escapeHtml(error.message)}</strong></article>`;
+    ranking.innerHTML = "";
+  }
+}
+
 async function renderAll() {
   renderOverview();
   renderHerd();
@@ -1607,6 +2139,9 @@ async function renderAll() {
   renderMarket();
   renderSimulationHistory();
   renderAuctionHistory();
+  renderLoanHistory();
+  await renderExecutiveReport();
+  await renderLotIntelligence();
   await renderAiInsights();
 }
 
@@ -1621,11 +2156,14 @@ async function refresh() {
   fillOptions(document.querySelector("#expenseLotSelect"), db.lots);
   document.querySelector("#expenseLotSelect").disabled = document.querySelector("#expenseAllocationMode").value === "all_lots_by_headcount";
   fillOptions(document.querySelector("#managementReportLotSelect"), db.lots, "Selecione um lote");
+  fillOptions(document.querySelector("#decisionBriefLotSelect"), db.lots, "Selecione um lote");
   fillOptions(document.querySelector("#weighingAnimalSelect"), db.animals, "Selecione um animal");
   fillOptions(document.querySelector("#lotWeighingLotSelect"), db.lots, "Selecione um lote");
   fillOptions(document.querySelector("#pastureSelect"), db.pastures);
   fillGroupedExpenseCategories(document.querySelector("#expenseCategorySelect"));
   fillExpenseFilterOptions();
+  const expenseForm = document.querySelector("#expenseForm");
+  if (expenseForm && !expenseForm.date.value) expenseForm.date.value = todayIso();
   fillOptions(document.querySelector("#simulationQuoteSelect"), db.marketQuotes.slice().reverse().map((quote) => ({
     id: quote.id,
     name: `${arrobaCategoryLabels[quote.animalSex || "mixed"] || "Mista"} - ${quote.region || "Mercado"} - ${currency.format(Number(quote.arrobaPrice || 0))} (${quote.date || "sem data"})`
@@ -1693,12 +2231,64 @@ function resetSimulationInputsForPurchase() {
   clearSimulation();
 }
 
+function resetExpenseForm() {
+  const form = document.querySelector("#expenseForm");
+  form.reset();
+  form.date.value = todayIso();
+  document.querySelector("#receiptPreviewInline").innerHTML = "";
+  document.querySelector("#receiptOcrResult").innerHTML = "";
+  document.querySelector("#expenseLotSelect").disabled = true;
+  Array.from(document.querySelector("#expenseLotSelect").options).forEach((option) => { option.selected = false; });
+}
+
+function validateExpensePayload(payload) {
+  if (!Number.isFinite(payload.amount) || payload.amount <= 0) return "Informe um valor de despesa maior que zero.";
+  if (!String(payload.description || "").trim()) return "Informe uma descrição para a despesa.";
+  if (payload.expenseCategoryId && !db.expenseCategories.some((category) => category.id === payload.expenseCategoryId)) return "Categoria de despesa não encontrada.";
+  if (payload.allocationMode === "specific_lots") {
+    if (!payload.lotIds.length) return "Selecione ao menos um lote para este rateio.";
+    const inactiveLot = payload.date
+      ? payload.lotIds.map((lotId) => db.lots.find((lot) => lot.id === lotId)).find((lot) => lot?.entryDate && String(lot.entryDate) > String(payload.date))
+      : null;
+    if (inactiveLot) return `O lote ${inactiveLot.name || inactiveLot.id} entrou depois da data da despesa. Ajuste a data ou o rateio.`;
+  }
+  if (payload.allocationMode === "all_lots_by_headcount" && payload.date) {
+    const activeLots = db.lots.filter((lot) => !lot.entryDate || String(lot.entryDate) <= String(payload.date));
+    if (!activeLots.length) return "Nenhum lote estava ativo na data da despesa.";
+  }
+  return "";
+}
+
+async function renderReceiptInlinePreview(file) {
+  const target = document.querySelector("#receiptPreviewInline");
+  if (!target) return;
+  if (!file) {
+    target.innerHTML = "";
+    return;
+  }
+  const dataUrl = await fileAsDataUrl(file);
+  target.innerHTML = `
+    <img src="${dataUrl}" alt="Prévia da nota selecionada" />
+    <div>
+      <strong>${escapeHtml(file.name || "Nota fotografada")}</strong>
+      <span>${number.format((file.size || 0) / 1024)} KB prontos para salvar</span>
+    </div>
+  `;
+}
+
+function resetQuoteForm() {
+  const form = document.querySelector("#quoteForm");
+  form.reset();
+  form.arrobaPrice.value = "";
+}
+
 async function createEntity(entity, payload) {
   try {
     await api(`/api/${entity}`, { method: "POST", body: JSON.stringify(payload) });
     await refresh();
+    showToast(`${entityLabels[entity] || "Registro"} salvo`, "Dados gravados e tela atualizada.");
   } catch (error) {
-    window.alert(error.message);
+    showToast("Não foi possível salvar", error.message, "error");
     throw error;
   }
 }
@@ -1707,8 +2297,9 @@ async function updateEntity(entity, id, payload) {
   try {
     await api(`/api/${entity}/${id}`, { method: "PUT", body: JSON.stringify(payload) });
     await refresh();
+    showToast(`${entityLabels[entity] || "Registro"} atualizado`, "Alteração gravada com sucesso.");
   } catch (error) {
-    window.alert(error.message);
+    showToast("Não foi possível atualizar", error.message, "error");
     throw error;
   }
 }
@@ -1716,11 +2307,13 @@ async function updateEntity(entity, id, payload) {
 async function deleteEntity(entity, id) {
   await api(`/api/${entity}/${id}`, { method: "DELETE" });
   await refresh();
+  showToast(`${entityLabels[entity] || "Registro"} excluído`, "O item saiu da base local.");
 }
 
 async function deleteSimulationsBulk(payload) {
   const result = await api("/api/simulations/bulk-delete", { method: "POST", body: JSON.stringify(payload) });
   await refresh();
+  showToast("Histórico atualizado", `${result.deleted || 0} simulação(ões) excluída(s).`);
   return result;
 }
 
@@ -1821,9 +2414,22 @@ function applyProjectedArrobaPrice(event = null) {
 }
 
 document.querySelectorAll("[data-view]").forEach((item) => {
-  item.addEventListener("click", () => setView(item.dataset.view));
+  item.addEventListener("click", () => {
+    setView(item.dataset.view);
+    if (item.dataset.lotContext && item.dataset.view === "simulate") {
+      const select = document.querySelector("#lotSelect");
+      select.value = item.dataset.lotContext;
+      select.dispatchEvent(new Event("change"));
+    }
+  });
 });
 
+document.querySelector("#sidebarToggle")?.addEventListener("click", () => {
+  setSidebarCollapsed(!sidebarCollapsed);
+});
+document.querySelectorAll("[data-module-tab]").forEach((button) => {
+  button.addEventListener("click", () => setModuleTab(button.dataset.moduleGroup, button.dataset.moduleTab));
+});
 document.querySelector("#refreshBtn").addEventListener("click", refresh);
 document.querySelector("#backupDbBtn").addEventListener("click", async () => {
   const backup = await api("/api/admin/backup-db");
@@ -1834,6 +2440,7 @@ document.querySelector("#backupDbBtn").addEventListener("click", async () => {
   link.download = `fazenda-slf-backup-${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
   URL.revokeObjectURL(url);
+  showToast("Backup gerado", "Arquivo JSON baixado para o seu computador.");
 });
 document.querySelector("#restoreDbBtn").addEventListener("click", () => {
   document.querySelector("#restoreDbInput").click();
@@ -1845,15 +2452,23 @@ document.querySelector("#restoreDbInput").addEventListener("change", async (even
   if (!confirm("Restaurar este backup vai substituir o banco atual deste ambiente. Deseja continuar?")) return;
   const payload = JSON.parse(await file.text());
   const result = await api("/api/admin/restore-db", { method: "POST", body: JSON.stringify(payload) });
-  alert(`Banco restaurado: ${result.lots} lotes, ${result.expenses} despesas e ${result.simulations} simulações.`);
   await refresh();
+  showToast("Banco restaurado", `${result.lots} lotes, ${result.expenses} despesas e ${result.simulations} simulações carregadas.`);
 });
 document.querySelector("#auctionForm").addEventListener("submit", compareAuctionLots);
 document.querySelector("#loanForm").addEventListener("submit", simulateLoan);
+document.querySelector("#refreshExecutiveReportBtn")?.addEventListener("click", renderExecutiveReport);
+document.querySelector("#printExecutiveReportBtn")?.addEventListener("click", () => {
+  document.body.classList.add("printing-management-report");
+  window.print();
+  setTimeout(() => document.body.classList.remove("printing-management-report"), 500);
+});
+document.querySelector("#decisionBriefForm")?.addEventListener("submit", generateDecisionBrief);
+document.querySelector("#analyzeReceiptBtn")?.addEventListener("click", analyzeReceiptOcr);
 document.querySelector("#deleteSelectedSimulationsBtn").addEventListener("click", async () => {
   const ids = Array.from(document.querySelectorAll("[data-simulation-select]:checked")).map((item) => item.value);
   if (!ids.length) {
-    window.alert("Selecione ao menos uma simulação.");
+    showToast("Nada selecionado", "Selecione ao menos uma simulação para excluir.", "warn");
     return;
   }
   const ok = window.confirm(`Excluir ${ids.length} simulação(ões) selecionada(s)?`);
@@ -1873,6 +2488,9 @@ document.querySelector("#expenseAllocationMode").addEventListener("change", () =
   const allLots = document.querySelector("#expenseAllocationMode").value === "all_lots_by_headcount";
   lotSelect.disabled = allLots;
   if (allLots) Array.from(lotSelect.options).forEach((option) => { option.selected = false; });
+});
+document.querySelector('#expenseForm [name="receipt"]').addEventListener("change", async (event) => {
+  await renderReceiptInlinePreview(event.currentTarget.files?.[0]);
 });
 ["expenseSearch", "expenseDateFrom", "expenseDateTo", "expenseAmountMin", "expenseAmountMax"].forEach((id) => {
   document.querySelector(`#${id}`)?.addEventListener("input", renderCosts);
@@ -1897,7 +2515,7 @@ document.querySelector("#lotManagementReportForm")?.addEventListener("submit", g
 document.querySelector("#printManagementReportBtn")?.addEventListener("click", () => {
   const report = document.querySelector("#lotManagementReport");
   if (!report?.innerHTML.trim()) {
-    window.alert("Gere um relatorio antes de imprimir.");
+    showToast("Relatório vazio", "Gere um relatório antes de imprimir.", "warn");
     return;
   }
   document.body.classList.add("printing-management-report");
@@ -1967,21 +2585,31 @@ document.querySelector("#lotSelect").addEventListener("change", () => {
 document.querySelector("#importCepeaBtn").addEventListener("click", async () => {
   const button = document.querySelector("#importCepeaBtn");
   button.textContent = "Importando...";
+  button.disabled = true;
   try {
     await api("/api/market/cepea-latest", { method: "POST", body: "{}" });
     await refresh();
+    showToast("Cotação importada", "Preço CEPEA atualizado no mercado.");
+  } catch (error) {
+    showToast("Falha ao importar CEPEA", error.message, "error");
   } finally {
     button.textContent = "Importar CEPEA atual";
+    button.disabled = false;
   }
 });
 document.querySelector("#importBcbBtn").addEventListener("click", async () => {
   const button = document.querySelector("#importBcbBtn");
   button.textContent = "Importando...";
+  button.disabled = true;
   try {
     await api("/api/financial/bcb-latest", { method: "POST", body: "{}" });
     await refresh();
+    showToast("Indicadores importados", "CDI e IPCA atualizados na base.");
+  } catch (error) {
+    showToast("Falha ao importar BCB", error.message, "error");
   } finally {
     button.textContent = "Importar BCB";
+    button.disabled = false;
   }
 });
 document.querySelector("#simulationQuoteSelect").addEventListener("change", applyProjectedArrobaPrice);
@@ -2006,6 +2634,13 @@ document.body.addEventListener("click", async (event) => {
   if (action === "viewReceipt") openReceiptDialog(id);
   if (action === "viewWeighingPhoto") openWeighingPhotoDialog(id);
   if (action === "viewLotWeighingPhoto") openLotWeighingPhotoDialog(id);
+  if (action === "simulateLot") {
+    setView("simulate");
+    const select = document.querySelector("#lotSelect");
+    select.value = id;
+    select.dispatchEvent(new Event("change"));
+  }
+  if (action === "gotoView") setView(id);
   if (action === "delete") {
     const ok = window.confirm("Excluir este registro? Esta ação remove o item do cadastro.");
     if (ok) await deleteEntity(entity, id);
@@ -2037,7 +2672,7 @@ document.querySelector("#editForm").addEventListener("submit", async (event) => 
     document.querySelector("#editDialog").close();
     editContext = null;
   } catch (error) {
-    window.alert(error.message);
+    showToast("Edição não gravada", error.message, "error");
   }
 });
 
@@ -2054,7 +2689,7 @@ document.querySelector("#simulationForm").addEventListener("submit", async (even
     payload[key] = parseNumericInput(payload[key]);
   }
   if (!Number.isFinite(payload.arrobaPrice) || payload.arrobaPrice <= 0) {
-    window.alert("Informe um preço válido para a arroba.");
+    showToast("Preço inválido", "Informe um preço válido para a arroba.", "warn");
     return;
   }
   payload.fortisPercentPv = payload.fortisPercentPv / 100;
@@ -2069,7 +2704,7 @@ document.querySelector("#simulationForm").addEventListener("submit", async (even
     payload.simulationBasis = "current";
     payload.currentArrobas = payload.purchaseArrobas;
     if (!payload.purchasePricePerHead || payload.purchasePricePerHead <= 0) {
-      window.alert("Informe o Valor de compra para simular a viabilidade.");
+      showToast("Valor de compra obrigatório", "Informe o valor de compra para simular a viabilidade.", "warn");
       return;
     }
     payload.purchasePricePerArroba = payload.purchaseArrobas > 0 ? payload.purchasePricePerHead / payload.purchaseArrobas : 0;
@@ -2084,6 +2719,7 @@ document.querySelector("#simulationForm").addEventListener("submit", async (even
   await refresh();
   restoreSimulationForm(formSnapshot);
   renderSimulation(result);
+  showToast("Simulação calculada", result.recommendation || "Resultado econômico atualizado.");
 });
 
 document.querySelector("#lotForm").addEventListener("submit", async (event) => {
@@ -2096,6 +2732,10 @@ document.querySelector("#lotForm").addEventListener("submit", async (event) => {
   payload.estimatedAgeMonths = payload.estimatedAgeMonths ? parseNumericInput(payload.estimatedAgeMonths) : null;
   await createEntity("lots", payload);
   event.currentTarget.reset();
+  event.currentTarget.quantity.value = 1;
+  event.currentTarget.purchaseArrobas.value = 6.5;
+  event.currentTarget.currentArrobas.value = 7;
+  event.currentTarget.purchasePricePerHead.value = 1950;
   setView("herd");
 });
 
@@ -2105,6 +2745,7 @@ document.querySelector("#animalForm").addEventListener("submit", async (event) =
   payload.currentArrobas = parseNumericInput(payload.currentArrobas || 0);
   await createEntity("animals", payload);
   event.currentTarget.reset();
+  fillOptions(document.querySelector("#animalLotSelect"), db.lots);
 });
 
 document.querySelector("#weighingAnimalSelect").addEventListener("change", () => {
@@ -2119,11 +2760,11 @@ document.querySelector("#estimateWeightBtn").addEventListener("click", async () 
   const files = Array.from(form.animalPhoto.files || []);
   const animalId = form.animalId.value;
   if (!animalId) {
-    window.alert("Selecione o animal antes de estimar o peso.");
+    showToast("Selecione um animal", "Escolha o animal antes de estimar o peso.", "warn");
     return;
   }
   if (!files.length) {
-    window.alert("Anexe ao menos uma foto ou vídeo do animal.");
+    showToast("Mídia necessária", "Anexe ao menos uma foto ou vídeo do animal.", "warn");
     return;
   }
   const button = document.querySelector("#estimateWeightBtn");
@@ -2177,11 +2818,11 @@ document.querySelector("#estimateLotWeightBtn").addEventListener("click", async 
   const files = Array.from(form.lotPhoto.files || []);
   const lotId = form.lotId.value;
   if (!lotId) {
-    window.alert("Selecione o lote antes de estimar o peso médio.");
+    showToast("Selecione um lote", "Escolha o lote antes de estimar o peso médio.", "warn");
     return;
   }
   if (!files.length) {
-    window.alert("Anexe ao menos uma foto ou vídeo do lote.");
+    showToast("Mídia necessária", "Anexe ao menos uma foto ou vídeo do lote.", "warn");
     return;
   }
   const button = document.querySelector("#estimateLotWeightBtn");
@@ -2247,6 +2888,7 @@ document.querySelector("#weighingForm").addEventListener("submit", async (event)
   await createEntity("animalWeighings", payload);
   form.reset();
   document.querySelector("#aiWeightResult").innerHTML = "";
+  fillOptions(document.querySelector("#weighingAnimalSelect"), db.animals, "Selecione um animal");
 });
 
 document.querySelector("#lotWeighingForm").addEventListener("submit", async (event) => {
@@ -2265,6 +2907,7 @@ document.querySelector("#lotWeighingForm").addEventListener("submit", async (eve
   await createEntity("lotWeighings", payload);
   form.reset();
   document.querySelector("#aiLotWeightResult").innerHTML = "";
+  fillOptions(document.querySelector("#lotWeighingLotSelect"), db.lots, "Selecione um lote");
 });
 
 document.querySelector("#expenseForm").addEventListener("submit", async (event) => {
@@ -2278,11 +2921,15 @@ document.querySelector("#expenseForm").addEventListener("submit", async (event) 
     payload.lotIds = [];
     payload.lotId = "";
   }
+  const validationError = validateExpensePayload(payload);
+  if (validationError) {
+    showToast("Revise a despesa", validationError, "warn");
+    return;
+  }
   payload.receiptName = file?.name || null;
   payload.receiptDataUrl = await fileAsDataUrl(file);
   await createEntity("expenses", payload);
-  event.currentTarget.reset();
-  document.querySelector("#expenseLotSelect").disabled = true;
+  resetExpenseForm();
 });
 
 document.querySelector("#pastureForm").addEventListener("submit", async (event) => {
@@ -2298,6 +2945,8 @@ document.querySelector("#movementForm").addEventListener("submit", async (event)
   event.preventDefault();
   await createEntity("pastureMovements", formData(event.currentTarget));
   event.currentTarget.reset();
+  fillOptions(document.querySelector("#movementLotSelect"), db.lots);
+  fillOptions(document.querySelector("#pastureSelect"), db.pastures);
 });
 
 document.querySelector("#quoteForm").addEventListener("submit", async (event) => {
@@ -2305,7 +2954,7 @@ document.querySelector("#quoteForm").addEventListener("submit", async (event) =>
   const payload = formData(event.currentTarget);
   payload.arrobaPrice = parseNumericInput(payload.arrobaPrice || 0);
   await createEntity("marketQuotes", payload);
-  event.currentTarget.reset();
+  resetQuoteForm();
 });
 
 document.querySelector("#testAiBtn").addEventListener("click", async () => {

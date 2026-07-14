@@ -15,6 +15,10 @@ MVP inicial de um sistema para gestão de recria/engorda, com interface web e AP
 - Série histórica anual nominal de R$/@ desde 1998 para estudo inicial de ciclo.
 - Módulo Leilão para comparar dois lotes por peso, preço da arroba, custo até a meta, margem e ROI.
 - Módulo Empréstimos para avaliar compra financiada, juros, parcela, capital próprio, lucro após dívida e CDI.
+- Histórico automático de comparações de leilão, simulações de venda e cenários de crédito.
+- Central de Relatórios com visão executiva, ações recomendadas e diagnóstico de prontidão para Postgres.
+- OCR de notinhas por IA visual quando `OPENAI_API_KEY` estiver configurada, com fallback local para triagem.
+- Brief de decisão por lote, usando regra determinística e enriquecimento OpenAI quando houver chave.
 - Motor de simulação de viabilidade:
   - peso vivo atual e alvo;
   - kg a ganhar;
@@ -57,12 +61,13 @@ Arquivos de publicação:
 - `public/service-worker.js`
 - `docs/deploy-mobile.md`
 
-O acesso aos módulos exige login. O usuário inicial local é:
+O acesso aos módulos exige login. Em uma base nova, o usuário inicial vem de `.env.local`:
 
-- `lucas@fazendaslf.com`
-- `FazendaSLF@2026`
+- `INITIAL_ADMIN_NAME`
+- `INITIAL_ADMIN_EMAIL`
+- `INITIAL_ADMIN_PASSWORD`
 
-Antes de publicar para uso real, troque a senha inicial e mantenha o diretório `data/` em disco persistente, porque o banco atual fica em `data/db.json`.
+Se `data/db.json` já existir, o app preserva os usuários do banco atual. Antes de publicar para uso real, troque a senha inicial e mantenha o diretório `data/` em disco persistente, porque o banco atual fica em `data/db.json`.
 
 ## Jornada da interface
 
@@ -73,8 +78,9 @@ Antes de publicar para uso real, troque a senha inicial e mantenha o diretório 
 - Mercado: cotações e insumos monitorados.
 - Leilão: comparação rápida de dois lotes usando o mesmo motor econômico da simulação.
 - Empréstimos: viabilidade de tomar dinheiro no banco para comprar animais.
+- Relatórios: KPIs executivos, decisões recentes, ações recomendadas e prontidão para banco real.
 - Simular: hipótese de venda com GMD, meta, preço da arroba, suplementação e resultado.
-- IA: contrato inicial para conexão futura com OpenAI/Gemini.
+- IA: ranking de lotes, brief de decisão e recursos OpenAI para OCR/pesagem quando configurados.
 
 ## API principal
 
@@ -98,6 +104,10 @@ Antes de publicar para uso real, troque a senha inicial e mantenha o diretório 
 - `POST /api/market/cepea-latest`
 - `POST /api/auction/compare`
 - `POST /api/loans/simulate`
+- `GET /api/reports/executive`
+- `GET /api/admin/db-readiness`
+- `POST /api/ocr/receipt`
+- `POST /api/ai/decision-brief`
 - `POST /api/simulate`
 - `POST /api/ai/hypothesis`
 - `GET /api/intelligence/insights`
