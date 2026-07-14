@@ -1,4 +1,4 @@
-const CACHE_NAME = "fazenda-slf-v16";
+const CACHE_NAME = "fazenda-slf-v17";
 const APP_SHELL = ["/", "/styles.css", "/app.js", "/manifest.webmanifest", "/logo-slf.png"];
 
 self.addEventListener("install", (event) => {

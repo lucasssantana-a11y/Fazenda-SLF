@@ -2396,31 +2396,49 @@ pre {
     position: sticky;
     top: 0;
     z-index: 30;
-    gap: 9px;
-    padding: 9px 10px 8px;
-    background: rgba(255, 255, 255, 0.97);
-    box-shadow: 0 8px 22px rgba(27, 44, 36, 0.08);
+    gap: 10px;
+    padding: 10px 10px 9px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 72px),
+      var(--nav);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 14px 32px rgba(16, 42, 34, 0.28);
+    color: #f5fbf7;
+  }
+
+  .sidebar-top {
+    padding: 2px 2px 0;
   }
 
   .brand strong {
     font-size: 16px;
     line-height: 1.05;
+    color: #f8fffb;
   }
 
   .brand span {
     font-size: 11px;
+    color: #c4dbd1;
   }
 
   .brand-logo {
     width: 42px;
     height: 42px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 8px 18px rgba(0, 0, 0, 0.18);
+  }
+
+  .sidebar-toggle {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.12);
+    color: #f8fffb;
   }
 
   .nav-list {
     width: calc(100vw - 20px);
-    gap: 6px;
+    gap: 7px;
     margin: 0 -10px;
-    padding: 2px 10px 7px;
+    padding: 3px 10px 9px;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
   }
@@ -2441,12 +2459,18 @@ pre {
     min-height: 38px;
     flex: 0 0 auto;
     scroll-snap-align: start;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 999px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    color: #edf8f2;
     padding: 8px 12px;
     font-size: 13px;
-    box-shadow: 0 4px 12px rgba(27, 44, 36, 0.05);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.16);
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
   }
 
   .nav-item::before {
@@ -2454,9 +2478,10 @@ pre {
   }
 
   .nav-item.active {
-    border-color: #b9cec3;
-    background: var(--brand);
-    color: #fff;
+    border-color: #f4c36a;
+    background: #f7fbf8;
+    color: var(--brand-dark);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   }
 
   .sidebar-actions {
@@ -2469,6 +2494,9 @@ pre {
   .sidebar-actions .ghost-button {
     width: 100%;
     min-height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.1);
+    color: #f5fbf7;
     padding: 6px 5px;
     font-size: 11px;
     white-space: normal;
